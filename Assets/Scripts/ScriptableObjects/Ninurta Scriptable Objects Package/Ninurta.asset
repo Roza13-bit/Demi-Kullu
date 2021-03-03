@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f84ab419a5f19da4fb2e3ac1b7009484, type: 3}
+  m_Name: Ninurta
+  m_EditorClassIdentifier: 
+  heroPrefab: {fileID: 6408240489960672487, guid: 5dd15ea7ded6b424a9f0d9214c90dcb6,
+    type: 3}
+  lightAttackSO: {fileID: 11400000, guid: 03c509de333444b43bab660d38e4d9ae, type: 2}
+  heavyAttackSO: {fileID: 11400000, guid: bcf1f3d791951fd4793d9176deece412, type: 2}
+  ultimateAttackSO: {fileID: 11400000, guid: bd204935da4b3b6448ca22a5f2c6c1eb, type: 2}
+  heroStartPos: {x: 0.1688461, y: 5.78, z: 14.92}
+  heroStartEuler: {x: 0, y: 180, z: 0}
+  heroStartSize: 0.2
