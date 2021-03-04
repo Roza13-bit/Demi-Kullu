@@ -41,7 +41,7 @@ NavMeshProjectSettings:
     cost: 1
   - name: 
     cost: 1
-  - name: 
+  - name: Not Part Of Mesh
     cost: 1
   - name: 
     cost: 1
