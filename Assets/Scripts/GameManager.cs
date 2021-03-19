@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     public List<Transform> activeGatesList = new List<Transform>();
 
+    public GameObject heroPrefab;
+
     public void StartTargetsMovement()
     {
         Debug.Log("Active targets : " + activeTargetsList.Count);
@@ -24,6 +26,12 @@ public class GameManager : MonoBehaviour
             activeTargetsList[x].GetComponent<NavMeshAgent>().SetDestination(activeGatesList[x].position);
 
         }
+
+    }
+
+    public void EnableHeroControllerScript()
+    {
+        heroPrefab.GetComponent<HeroController>().enabled = true;
 
     }
 

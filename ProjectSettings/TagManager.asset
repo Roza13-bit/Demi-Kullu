@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Spawn
   - EndGate
+  - UIManager
+  - AttackTransform
   layers:
   - Default
   - TransparentFX

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UIClass;
 
 public class GameSetupSingleton : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class GameSetupSingleton : MonoBehaviour
     [SerializeField] private GameManager gameManagerSC;
 
     [SerializeField] private StateManager stateManagerSC;
+
+    [SerializeField] private UIManager uiManagerSC;
 
     // Private Variables.
 
@@ -32,7 +35,15 @@ public class GameSetupSingleton : MonoBehaviour
     // Add the targets into a list in the game manager class.
     public void InstantiateCurrentLevelObjects()
     {
+        uiManagerSC.lightAttackSO = heroPrefabSO.lightAttackSO;
+
+        uiManagerSC.heavyAttackSO = heroPrefabSO.heavyAttackSO;
+
+        uiManagerSC.ultimateAttackSO = heroPrefabSO.ultimateAttackSO;
+
         _heroPrefab = Instantiate(heroPrefabSO.heroPrefab);
+
+        gameManagerSC.heroPrefab = _heroPrefab;
 
         _mazePrefab = Instantiate(mazePrefab);
 

@@ -21,7 +21,7 @@ public class StateManager : MonoBehaviour
 
     }
 
-    public void StartPlayStartedState()
+    public void StartGameLoadedState()
     {
         GameLoadedEvent.Invoke();
 
