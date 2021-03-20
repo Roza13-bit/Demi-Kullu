@@ -2,10 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UIClass;
 
 public class HeroController : MonoBehaviour
 {
+    [Header("Attack States")]
+
+    public UnityEvent LightAttackEvent;
+
+    public UnityEvent HeavyAttackEvent;
+
+    public UnityEvent UltimateAttackEvent;
+
     // Private Variables.
 
     // Attack scriptable objects.
@@ -57,9 +66,9 @@ public class HeroController : MonoBehaviour
 
     private void RotateCameraAndAim()
     {
-        firstPersonCamera.transform.LookAt(aimMarble);
+        firstPersonCamera.transform.LookAt(aimMarble, Vector3.up);
 
-        _lightAttackParticleSys.transform.LookAt(aimMarble);
+        _lightAttackParticleSys.transform.LookAt(aimMarble, Vector3.up);
 
         //_heavyAttackParticleSys.transform.LookAt(aimMarble);
 
@@ -81,75 +90,57 @@ public class HeroController : MonoBehaviour
 
         Debug.Log("Light attack particle system name : " + _lightAttackSO.skillGO.name);
 
-        _lightAttackParticleSys = Instantiate(_lightAttackSO.skillGO, particleSystemTransform.position, Quaternion.identity);
+        _lightAttackParticleSys = Instantiate(_lightAttackSO.skillGO, particleSystemTransform.position, Quaternion.identity, transform);
 
         //_heavyAttackParticleSys = Instantiate(_heavyAttackSO.skillGO);
 
         //_ultimateAttackParticleSys = Instantiate(_ultimateAttackSO.skillGO);
 
-        DisableParticleSystemsOnInstantiate();
-
-    }
-
-    private void DisableParticleSystemsOnInstantiate()
-    {
-        _lightAttackParticleSys.GetComponentInChildren<ParticleSystem>().Stop();
-
-        //_heavyAttackParticleSys.GetComponent<ParticleSystem>().Stop();
-
-        //_ultimateAttackParticleSys.GetComponent<ParticleSystem>().Stop();
-
     }
 
     public void LightAttackShootingState()
     {
+        LightAttackEvent.Invoke();
+
         _uiManagerSC = FindObjectOfType<UIManager>();
 
         _uiManagerSC.SetLightAttackPressed();
 
-        // StartLightAttackShooting();
+    }
+
+    public void PlayLightAttack()
+    {
+        LightAttackParticleController lightParticleSys = FindObjectOfType<LightAttackParticleController>();
+
+        lightParticleSys.PlayLightAttack();
 
     }
 
-    private void StartLightAttackShooting()
+    public void StopLightAttack()
     {
-        Debug.Log("Entered StartLightShooting");
+        LightAttackParticleController lightParticleSys = FindObjectOfType<LightAttackParticleController>();
 
-        isShootingStarted = true;
-
-        Debug.Log(isShootingStarted);
+        lightParticleSys.StopLightAttack();
 
     }
 
-    public void MediumAttackShootingState()
+    public void HeavyAttackShootingState()
     {
+        HeavyAttackEvent.Invoke();
+
         _uiManagerSC = FindObjectOfType<UIManager>();
 
         _uiManagerSC.SetHeavyAttackPressed();
-
-        // StartHeavyAttackShooting();
-
-    }
-
-    private void StartHeavyAttackShooting()
-    {
-        isShootingStarted = true;
 
     }
 
     public void UltimateAttackShootingState()
     {
+        UltimateAttackEvent.Invoke();
+
         _uiManagerSC = FindObjectOfType<UIManager>();
 
         _uiManagerSC.SetUltimateAttackPressed();
-
-        // StartUltimateAttackShooting();
-
-    }
-
-    private void StartUltimateAttackShooting()
-    {
-        isShootingStarted = true;
 
     }
 

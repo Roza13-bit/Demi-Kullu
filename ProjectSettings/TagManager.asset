@@ -8,6 +8,7 @@ TagManager:
   - EndGate
   - UIManager
   - AttackTransform
+  - LightAttackParticle
   layers:
   - Default
   - TransparentFX

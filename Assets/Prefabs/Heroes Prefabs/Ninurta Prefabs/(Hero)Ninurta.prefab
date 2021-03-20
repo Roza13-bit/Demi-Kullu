@@ -45,7 +45,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4527471fd4fc09f468b32cbf3effb2a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimMarble: {fileID: 0}
+  LightAttackEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -987219527383742924}
+        m_MethodName: PlayLightAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  HeavyAttackEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -987219527383742924}
+        m_MethodName: StopLightAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  UltimateAttackEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -987219527383742924}
+        m_MethodName: StopLightAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6501026109971781861
 GameObject:
   m_ObjectHideFlags: 0

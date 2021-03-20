@@ -19,6 +19,10 @@ namespace UIClass
 
         [SerializeField] private TextMeshProUGUI startPlayTimerTMP;
 
+        [SerializeField] private GameObject aimCrosshair;
+
+        [Header("Public Variables")]
+
         public SkillScriptableObject lightAttackSO;
 
         public Button lightAttackButton;
@@ -116,6 +120,8 @@ namespace UIClass
 
         public void SetLightAttackPressed()
         {
+            aimCrosshair.SetActive(true);
+
             lightAttackButton.image.sprite = _lightAttackSpritePressed;
 
             heavyAttackButton.image.sprite = _heavyAttackSpriteMain;
@@ -126,6 +132,8 @@ namespace UIClass
         
         public void SetHeavyAttackPressed()
         {
+            aimCrosshair.SetActive(false);
+
             lightAttackButton.image.sprite = _lightAttackSpriteMain;
 
             heavyAttackButton.image.sprite = _heavyAttackSpritePressed;
@@ -136,6 +144,8 @@ namespace UIClass
 
         public void SetUltimateAttackPressed()
         {
+            aimCrosshair.SetActive(false);
+
             lightAttackButton.image.sprite = _lightAttackSpriteMain;
 
             heavyAttackButton.image.sprite = _heavyAttackSpriteMain;
