@@ -25,43 +25,13 @@ public class CameraTouchController : MonoBehaviour
 
     private Vector3 cameraFirstPersonStartPos;
 
-    private Quaternion cameraFirstPersonStartRot;
-
     public void LerpCameraToFirstPersonView()
     {
         Debug.Log("Camera parent : " + transform.parent.name);
 
         cameraFirstPersonStartPos = new Vector3(0.0f, cameraFirstPersonStartY, cameraFirstPersonStartZ);
 
-        cameraFirstPersonStartRot.eulerAngles = new Vector3(cameraFirstPersonStartRotX, cameraFirstPersonStartRotY, 0.0f);
-
         StartCoroutine(LerpCameraToStartPos(cameraFirstPersonStartPos));
-
-        StartCoroutine(LerpCameraToStartRot(cameraFirstPersonStartRot));
-
-    }
-
-    private IEnumerator LerpCameraToStartRot(Quaternion startRot)
-    {
-        yield return new WaitForSeconds(waitBeforeLerpingCamera);
-
-        var timeSinceStartedRotLerp = 0.0f;
-
-        while (true)
-        {
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, startRot, timeSinceStartedRotLerp * lerpRotSpeed);
-
-            timeSinceStartedRotLerp += Time.deltaTime;
-
-            if (transform.localRotation == startRot)
-            {
-                yield break;
-
-            }
-
-            yield return null;
-
-        }
 
     }
 

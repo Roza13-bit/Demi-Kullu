@@ -19,7 +19,7 @@ namespace UIClass
 
         [SerializeField] private TextMeshProUGUI startPlayTimerTMP;
 
-        [SerializeField] private GameObject aimCrosshair;
+        public GameObject aimCrosshair;
 
         [Header("Public Variables")]
 
@@ -113,18 +113,6 @@ namespace UIClass
             _ultimateAttackSpriteMain = ultimateAttackSO.skillSpriteMain;
 
             _ultimateAttackSpritePressed = ultimateAttackSO.skillSpritePressed;
-
-            ultimateAttackButton.image.sprite = _ultimateAttackSpriteMain;
-
-        }
-
-        public void SetLightAttackPressed()
-        {
-            aimCrosshair.SetActive(true);
-
-            lightAttackButton.image.sprite = _lightAttackSpritePressed;
-
-            heavyAttackButton.image.sprite = _heavyAttackSpriteMain;
 
             ultimateAttackButton.image.sprite = _ultimateAttackSpriteMain;
 

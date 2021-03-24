@@ -15,67 +15,132 @@ public class HeroController : MonoBehaviour
 
     public UnityEvent UltimateAttackEvent;
 
-    // Private Variables.
+    [Header("Camera Swiping Settings")]
+
+    public float cameraAimSpeed = 0.5f;
+
+    [SerializeField] private float direction = -1;
+
+    [SerializeField] private float cameraZoomSpeed;
+
+    [SerializeField] private int upDownClampAngleMin;
+
+    [SerializeField] private int upDownClampAngleMax;
+
+    [SerializeField] private int leftRightClampAngle;
+
+    [SerializeField] private float leftProjectileOffset;
+
+    [SerializeField] private float upProjectileOffset;
+
+    // ~~ Private Variables. ~~
 
     // Attack scriptable objects.
     private SkillScriptableObject _lightAttackSO;
-    private GameObject _lightAttackParticleSys;
+    private GameObject _lightAttackGO;
 
     private SkillScriptableObject _heavyAttackSO;
-    private GameObject _heavyAttackParticleSys;
+    private GameObject _heavyAttackGO;
 
     private SkillScriptableObject _ultimateAttackSO;
-    private GameObject _ultimateAttackParticleSys;
+    private GameObject _ultimateAttackGO;
 
     private UIManager _uiManagerSC;
 
     // Attack state machine variables.
-    private Transform particleSystemTransform;
 
-    private bool isShootingStarted;
+    private Transform _lightAttackShootingGO;
 
-    private Transform aimMarble;
+    private List<GameObject> _lightAttackPoolList = new List<GameObject>();
 
-    private CameraTouchController firstPersonCamera;
+    // Camera swiping variables.
 
+    private Touch initTouch = new Touch();
+
+    private Camera firstPersonCamera;
+
+    private float rotX = 0f;
+
+    private float rotY = 0f;
+
+    private Vector3 originalRot;
+
+    private GameObject aimCrosshair;
+
+    // Initializing the class.
     private void Start()
     {
-        Debug.Log("Hero Controller Has Started.");
+        _lightAttackShootingGO = transform.Find("LightAttackTransformGO");
 
-        isShootingStarted = true;
+        firstPersonCamera = FindObjectOfType<Camera>();
 
-        particleSystemTransform = transform.Find("LightAttackParticleTransform");
-
-        aimMarble = FindObjectOfType<aimController>().transform;
-
-        firstPersonCamera = FindObjectOfType<CameraTouchController>();
+        _lightAttackShootingGO.transform.forward = firstPersonCamera.transform.forward;
 
         SetupAttacks();
 
+        originalRot = firstPersonCamera.transform.eulerAngles;
+
+        rotX = originalRot.x;
+
+        rotY = originalRot.y;
+
+        aimCrosshair = _uiManagerSC.aimCrosshair;
+
     }
 
+    // In fixed update, we listen to a touches from the user.
+    // The user can swipe to rotate the camera.
     private void FixedUpdate()
     {
-        if (isShootingStarted)
+        foreach (Touch touch in Input.touches)
         {
-            RotateCameraAndAim();
+            if (touch.phase == TouchPhase.Began)
+            {
+                initTouch = touch;
+
+                StartCoroutine(ZoomInCameraWhileShooting());
+
+                aimCrosshair.SetActive(true);
+
+                PlayLightAttack();
+
+            }
+            else if (touch.phase == TouchPhase.Moved)
+            {
+                float deltaX = initTouch.position.x - touch.position.x;
+
+                float deltaY = initTouch.position.y - touch.position.y;
+
+                rotX -= deltaX * Time.deltaTime * cameraAimSpeed * direction;
+
+                rotY += deltaY * Time.deltaTime * cameraAimSpeed * direction;
+
+                rotX = Mathf.Clamp(rotX, -leftRightClampAngle, leftRightClampAngle);
+
+                rotY = Mathf.Clamp(rotY, upDownClampAngleMin, upDownClampAngleMax);
+                
+                firstPersonCamera.transform.eulerAngles = new Vector3(rotY, rotX, 0f);
+
+                _lightAttackShootingGO.transform.eulerAngles = new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset, firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
+
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                StopLightAttack();
+
+                aimCrosshair.SetActive(false);
+
+                StartCoroutine(ZoomOutCameraWhileNotShooting());
+
+                initTouch = new Touch();
+
+            }
 
         }
 
     }
 
-    private void RotateCameraAndAim()
-    {
-        firstPersonCamera.transform.LookAt(aimMarble, Vector3.up);
-
-        _lightAttackParticleSys.transform.LookAt(aimMarble, Vector3.up);
-
-        //_heavyAttackParticleSys.transform.LookAt(aimMarble);
-
-        //_ultimateAttackParticleSys.transform.LookAt(aimMarble);
-
-    }
-
+    // Draw the scriptable attack scripts from the UIManager to local variables.
     private void SetupAttacks()
     {
         _uiManagerSC = FindObjectOfType<UIManager>();
@@ -88,41 +153,166 @@ public class HeroController : MonoBehaviour
 
         _ultimateAttackSO = _uiManagerSC.ultimateAttackSO;
 
-        Debug.Log("Light attack particle system name : " + _lightAttackSO.skillGO.name);
+        _lightAttackGO = _lightAttackSO.skillGO;
 
-        _lightAttackParticleSys = Instantiate(_lightAttackSO.skillGO, particleSystemTransform.position, Quaternion.identity, transform);
+        for (int x = 0; x < 15; x++)
+        {
+            var instance = Instantiate(_lightAttackGO, _lightAttackShootingGO.position, Quaternion.identity, _lightAttackShootingGO);
 
-        //_heavyAttackParticleSys = Instantiate(_heavyAttackSO.skillGO);
+            instance.transform.forward = _lightAttackShootingGO.transform.forward;
 
-        //_ultimateAttackParticleSys = Instantiate(_ultimateAttackSO.skillGO);
+            _lightAttackPoolList.Add(instance);
+
+            instance.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+
+            instance.GetComponent<Rigidbody>().isKinematic = true;
+
+            instance.SetActive(false);
+
+        }
 
     }
 
-    public void LightAttackShootingState()
+    // Zoom out the camera field of view, while the player is not aiming. 
+    // Starts after a small wait time.
+    private IEnumerator ZoomOutCameraWhileNotShooting()
     {
-        LightAttackEvent.Invoke();
+        StopCoroutine(ZoomInCameraWhileShooting());
 
-        _uiManagerSC = FindObjectOfType<UIManager>();
+        var timeSinceStartedZoomOut = 0.0f;
 
-        _uiManagerSC.SetLightAttackPressed();
+        while (true)
+        {
+            firstPersonCamera.fieldOfView = Mathf.Lerp(firstPersonCamera.fieldOfView, 50f, timeSinceStartedZoomOut * cameraZoomSpeed);
+
+            timeSinceStartedZoomOut += Time.deltaTime;
+
+            if (firstPersonCamera.fieldOfView == 50f)
+            {
+                yield break;
+
+            }
+
+            yield return new WaitForFixedUpdate();
+
+        }
 
     }
 
+    // Zoom in the camera field of view, while the player is shooting.
+    private IEnumerator ZoomInCameraWhileShooting()
+    {
+        StopCoroutine(ZoomOutCameraWhileNotShooting());
+
+        var timeSinceStartedZoomIn = 0.0f;
+
+        while (true)
+        {
+            firstPersonCamera.fieldOfView = Mathf.Lerp(firstPersonCamera.fieldOfView, 35f, timeSinceStartedZoomIn * cameraZoomSpeed);
+
+            timeSinceStartedZoomIn += Time.deltaTime;
+
+            if (firstPersonCamera.fieldOfView == 35f)
+            {
+                yield break;
+
+            }
+
+            yield return new WaitForFixedUpdate();
+
+        }
+
+    }
+
+    // ~~ Light attack functions. ~~
+
+    // Start shooting the light attack.
     public void PlayLightAttack()
     {
-        LightAttackParticleController lightParticleSys = FindObjectOfType<LightAttackParticleController>();
-
-        lightParticleSys.PlayLightAttack();
+        StartCoroutine(LightAttackShootingCoroutine(_lightAttackSO.skillCooldown));
 
     }
 
+    // Stop and reset the light attack.
     public void StopLightAttack()
     {
-        LightAttackParticleController lightParticleSys = FindObjectOfType<LightAttackParticleController>();
+        StopAllCoroutines();
 
-        lightParticleSys.StopLightAttack();
+        foreach (GameObject go in _lightAttackPoolList)
+        {
+            go.SetActive(false);
+
+            go.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+
+            go.GetComponent<Rigidbody>().isKinematic = true;
+
+            go.transform.localPosition = Vector3.zero;
+
+        }
 
     }
+
+    // Reset a projectile that touched the shredder collider.
+    // This is the function that resets objects for the object pooling system.
+    public void LightAttackResetSoloProjectile(GameObject projectile)
+    {
+        for (int x = 0; x < _lightAttackPoolList.Count; x++)
+        {
+            if (_lightAttackPoolList[x] == projectile)
+            {
+                projectile.SetActive(false);
+
+                projectile.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+
+                projectile.GetComponent<Rigidbody>().isKinematic = true;
+
+                projectile.transform.localPosition = Vector3.zero;
+
+            }
+
+        }
+
+    }
+
+    // Activate the projectile shooting loop.
+    // This function waits the cooldown time, and than activates and shoots
+    // a projectile from the object pool.
+    private IEnumerator LightAttackShootingCoroutine(float cooldown)
+    {
+        for (int x = 0; x < _lightAttackPoolList.Count; x++)
+        {
+            if (!_lightAttackPoolList[x].activeSelf)
+            {
+                var instance = _lightAttackPoolList[x];
+
+                instance.SetActive(true);
+
+                instance.GetComponent<Rigidbody>().isKinematic = false;
+
+                instance.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+
+                LightAttackAddProjectileForce(instance);
+
+                x = 0;
+
+            }
+
+            yield return new WaitForSeconds(cooldown);
+
+        }
+
+    }
+
+    // Add physical force the the projectile (shoot it).
+    private void LightAttackAddProjectileForce(GameObject go)
+    {
+        go.GetComponent<Rigidbody>().mass = _lightAttackSO.skillMass;
+
+        go.GetComponent<Rigidbody>().velocity =  _lightAttackShootingGO.forward * _lightAttackSO.skillSpeed;
+
+    }
+
+    // ~~ Heavy attack functions. ~~
 
     public void HeavyAttackShootingState()
     {
@@ -133,6 +323,8 @@ public class HeroController : MonoBehaviour
         _uiManagerSC.SetHeavyAttackPressed();
 
     }
+
+    // ~~ Ultimate attack functions. ~~
 
     public void UltimateAttackShootingState()
     {

@@ -18,4 +18,8 @@ public class SkillScriptableObject : ScriptableObject
 
     public float skillCooldown;
 
+    public float skillSpeed;
+
+    public float skillMass;
+
 }
