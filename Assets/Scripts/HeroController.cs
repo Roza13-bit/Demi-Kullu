@@ -35,6 +35,8 @@ public class HeroController : MonoBehaviour
 
     [SerializeField] private float upProjectileOffset;
 
+    [SerializeField] private LayerMask ignoreMask;
+
     // ~~ Private Variables. ~~
 
     // Attack scriptable objects.
@@ -49,6 +51,8 @@ public class HeroController : MonoBehaviour
 
     private UIManager _uiManagerSC;
 
+    private GameManager _gameManagerSC;
+
     // Attack state machine variables.
 
     private Transform _lightAttackShootingGO;
@@ -58,6 +62,12 @@ public class HeroController : MonoBehaviour
     static bool _lightAttackActive;
 
     [SerializeField] private Transform _heavyAttackAimDomeGO;
+
+    private IEnumerator shootingCoroutine;
+
+    private IEnumerator zoomInCoroutine;
+
+    private IEnumerator zoomOutCoroutine;
 
     // Camera swiping variables.
 
@@ -84,15 +94,21 @@ public class HeroController : MonoBehaviour
 
         _eventSystem = FindObjectOfType<EventSystem>();
 
+        _gameManagerSC = FindObjectOfType<GameManager>();
+
         _lightAttackShootingGO.transform.forward = firstPersonCamera.transform.forward;
 
         SetupAttacks();
 
         originalRot = firstPersonCamera.transform.eulerAngles;
 
-        rotX = originalRot.x;
+        rotY = originalRot.x;
 
-        rotY = originalRot.y;
+        Debug.Log("rotX : " + rotX);
+
+        rotX = originalRot.y;
+
+        Debug.Log("rotY : " + rotY);
 
         aimCrosshair = _uiManagerSC.aimCrosshair;
 
@@ -239,13 +255,19 @@ public class HeroController : MonoBehaviour
 
         }
 
+        zoomInCoroutine = ZoomInCameraWhileShooting();
+
+        zoomOutCoroutine = ZoomOutCameraWhileNotShooting();
+
+        shootingCoroutine = LightAttackShootingCoroutine(_lightAttackSO.skillCooldown);
+
     }
 
     // Zoom out the camera field of view, while the player is not aiming. 
     // Starts after a small wait time.
     private IEnumerator ZoomOutCameraWhileNotShooting()
     {
-        StopCoroutine(ZoomInCameraWhileShooting());
+        StopCoroutine(zoomInCoroutine);
 
         var timeSinceStartedZoomOut = 0.0f;
 
@@ -270,7 +292,7 @@ public class HeroController : MonoBehaviour
     // Zoom in the camera field of view, while the player is shooting.
     private IEnumerator ZoomInCameraWhileShooting()
     {
-        StopCoroutine(ZoomOutCameraWhileNotShooting());
+        StopCoroutine(zoomOutCoroutine);
 
         var timeSinceStartedZoomIn = 0.0f;
 
@@ -297,14 +319,14 @@ public class HeroController : MonoBehaviour
     // Start shooting the light attack.
     public void PlayLightAttack()
     {
-        StartCoroutine(LightAttackShootingCoroutine(_lightAttackSO.skillCooldown));
+        StartCoroutine(shootingCoroutine);
 
     }
 
     // Stop and reset the light attack.
     public void StopLightAttack()
     {
-        StopAllCoroutines();
+        StopCoroutine(shootingCoroutine);
 
         foreach (GameObject go in _lightAttackPoolList)
         {
@@ -384,7 +406,7 @@ public class HeroController : MonoBehaviour
 
                 Debug.DrawRay(ray.origin, ray.direction * 10, Color.blue, 1f);
 
-                if (Physics.Raycast(ray, out hit))
+                if (Physics.Raycast(ray, out hit, 200f, ~ignoreMask))
                 {
                     if (hit.collider.CompareTag("FightGround"))
                     {
@@ -396,7 +418,7 @@ public class HeroController : MonoBehaviour
                     
                 x = 0;
 
-                yield return null;
+                yield return new WaitForFixedUpdate();
 
             }
 
@@ -426,6 +448,7 @@ public class HeroController : MonoBehaviour
 
     }
 
+    // Change the shooting state to heavy attack mode.
     public void StartHeavyAttackAimAndShoot()
     {
         Debug.Log("Heavy event");
@@ -436,15 +459,23 @@ public class HeroController : MonoBehaviour
 
     }
 
+    // Do the actual damage to the targets that are
+    // touching the heavy attack aim dome.
     private void ShootHeavyAttack()
     {
+        StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
+
         _lightAttackActive = true;
 
         Debug.Log(_lightAttackActive);
 
         _heavyAttackAimDomeGO.localPosition = new Vector3(0f, 0f, 400f);
 
-        StopAllCoroutines();
+        _gameManagerSC.TargetsListHeavyDamage();
+
+        aimCrosshair.SetActive(false);
+
+        StopCoroutine(shootingCoroutine);
 
         foreach (GameObject go in _lightAttackPoolList)
         {
@@ -458,19 +489,31 @@ public class HeroController : MonoBehaviour
 
         }
 
-        aimCrosshair.SetActive(false);
-
     }
 
     // ~~ Ultimate attack functions. ~~
 
+    // Set ultimate attack button to pressed.
+    // Invoke ultimate attack event.
     public void UltimateAttackShootingState()
     {
-        UltimateAttackEvent.Invoke();
-
         _uiManagerSC = FindObjectOfType<UIManager>();
 
         _uiManagerSC.SetUltimateAttackPressed();
+
+        UltimateAttackEvent.Invoke();
+
+    }
+
+    // Shoot ultimate attack.
+    // Start ultimate attack cd.
+    public void ShootUltimateAttack()
+    {
+        _uiManagerSC.StartUltimateCDTimer();
+
+        _gameManagerSC = FindObjectOfType<GameManager>();
+
+        _gameManagerSC.TargetsListUltimateDamage();
 
     }
 

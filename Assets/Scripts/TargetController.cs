@@ -10,12 +10,16 @@ public class TargetController : MonoBehaviour
 
     [SerializeField] private float health;
 
+    private GameManager _gameManagerSC;
+
     private NavMeshAgent targetNavmesh;
 
     private Slider healthSlider;
 
     private void Start()
     {
+        _gameManagerSC = FindObjectOfType<GameManager>();
+
         targetNavmesh = gameObject.GetComponent<NavMeshAgent>();
 
         healthSlider = gameObject.GetComponentInChildren<Slider>();
@@ -28,17 +32,36 @@ public class TargetController : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.CompareTag("PowerShank"))
+        if (other.CompareTag("PowerShank"))
         {
             Debug.Log("Collision Occurd");
 
-            var damage = 10f;
+            var damage = _gameManagerSC.lightAttackSO.skillDamage;
 
             UpdateSliderValue(damage);
 
-            Debug.Log("Minus 10 Damage");
+            Debug.Log("Minus " + damage + " Damage");
+
+        }
+        else if (other.CompareTag("GroundShutter"))
+        {
+            _gameManagerSC.touchedTargetsList.Add(this.gameObject);
+
+            Debug.Log("Touched targets list length : " + _gameManagerSC.touchedTargetsList.Count);
+
+        }
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("GroundShutter"))
+        {
+            _gameManagerSC.touchedTargetsList.Remove(this.gameObject);
+
+            Debug.Log("Touched targets list length : " + _gameManagerSC.touchedTargetsList.Count);
 
         }
 
@@ -52,7 +75,7 @@ public class TargetController : MonoBehaviour
 
     }
 
-    void UpdateSliderValue(float damage)
+    public void UpdateSliderValue(float damage)
     {
         health -= damage;
 

@@ -12,6 +12,7 @@ TagManager:
   - UI
   - LightAttackParticle
   - FightGround
+  - GroundShutter
   - HeavyAttackParticle
   layers:
   - Default
@@ -24,7 +25,7 @@ TagManager:
   - 
   - Map
   - Game
-  - 
+  - AimLayer
   - 
   - 
   - 

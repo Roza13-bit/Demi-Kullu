@@ -19,6 +19,10 @@ namespace UIClass
 
         [SerializeField] private TextMeshProUGUI startPlayTimerTMP;
 
+        [SerializeField] private TextMeshProUGUI heavyCDTimerTMP;
+
+        [SerializeField] private TextMeshProUGUI ultimateCDTimerTMP;
+
         public GameObject aimCrosshair;
 
         [Header("Public Variables")]
@@ -51,6 +55,8 @@ namespace UIClass
 
         // private GameObject _gameSceneCanvas;
 
+        // Sets the game canvas active. 
+        // Starts the button sprites pull from the scriptable objects.
         public void LoadGameSceneCanvas()
         {
             gameSceneCanvas.SetActive(true);
@@ -59,6 +65,8 @@ namespace UIClass
 
         }
 
+        // Set the play button to inactive.
+        // Play the game start countdown.
         public void TurnOffButtonAndTurnOnTimer()
         {
             playButton.SetActive(false);
@@ -69,6 +77,7 @@ namespace UIClass
 
         }
 
+        // Game start countdown coroutine.
         public IEnumerator StartPlayTimer()
         {
             for (int x = 3; x >= 0; x--)
@@ -96,6 +105,8 @@ namespace UIClass
 
         }
 
+        // Sets all of the button sprites, from the scriptable
+        // objects into the private variables.
         public void SetAttackButtonsSprites()
         {
             _lightAttackSpriteMain = lightAttackSO.skillSpriteMain;
@@ -118,27 +129,93 @@ namespace UIClass
 
         }
         
+        // Sets the heavy attack button to pressed sprite.
         public void SetHeavyAttackPressed()
         {
-            aimCrosshair.SetActive(false);
-
-            lightAttackButton.image.sprite = _lightAttackSpriteMain;
-
             heavyAttackButton.image.sprite = _heavyAttackSpritePressed;
+
+        }
+
+        // Sets the heavy attack button to unpressed sprite.
+        public void SetHeavyAttackUnpressed()
+        {
+            heavyAttackButton.image.sprite = _heavyAttackSpriteMain;
+
+        }
+
+        // Starts the cooldown timer for the heavy attack.
+        // Makes the heavy attack button unclickable.
+        // Sets button sprite to unpressed after cd is finished.
+        public IEnumerator SetHeavyAttackCooldown()
+        {
+            heavyAttackButton.interactable = false;
+
+            heavyCDTimerTMP.gameObject.SetActive(true);
+
+            for (int x = (int)heavyAttackSO.skillCooldown; x > 0; x--)
+            {
+                heavyCDTimerTMP.text = "" + x;
+
+                yield return new WaitForSeconds(1f);
+
+            }
+
+            heavyCDTimerTMP.gameObject.SetActive(false);
+
+            heavyAttackButton.interactable = true;
+
+            SetHeavyAttackUnpressed();
+
+        }
+
+        // Sets the ultimate attack button to pressed sprite.
+        public void SetUltimateAttackPressed()
+        {
+            Debug.Log("Started ultimate press.");
+
+            ultimateAttackButton.image.sprite = _ultimateAttackSpritePressed;
+
+        }
+
+        // Sets the ultimate attack button to unpressed sprite.
+        public void SetUltimateAttackUnpressed()
+        {
+            Debug.Log("Started ultimate unpress.");
 
             ultimateAttackButton.image.sprite = _ultimateAttackSpriteMain;
 
         }
 
-        public void SetUltimateAttackPressed()
+        // Starts the cooldown timer for the ultimate attack.
+        // Makes the ultimate attack button unclickable.
+        // Sets button sprite to unpressed after cd is finished.
+        public void StartUltimateCDTimer()
+        { 
+            StartCoroutine(SetUltimateAttackCooldown()); 
+
+        }
+
+        private IEnumerator SetUltimateAttackCooldown()
         {
-            aimCrosshair.SetActive(false);
+            Debug.Log("Started ultimate cd.");
 
-            lightAttackButton.image.sprite = _lightAttackSpriteMain;
+            ultimateAttackButton.interactable = false;
 
-            heavyAttackButton.image.sprite = _heavyAttackSpriteMain;
+            ultimateCDTimerTMP.gameObject.SetActive(true);
 
-            ultimateAttackButton.image.sprite = _ultimateAttackSpritePressed;
+            for (int x = (int)ultimateAttackSO.skillCooldown; x > 0; x--)
+            {
+                ultimateCDTimerTMP.text = "" + x;
+
+                yield return new WaitForSeconds(1f);
+
+            }
+
+            ultimateCDTimerTMP.gameObject.SetActive(false);
+
+            ultimateAttackButton.interactable = true;
+
+            SetUltimateAttackUnpressed();
 
         }
 

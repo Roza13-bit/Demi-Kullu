@@ -11,12 +11,6 @@ public class CameraTouchController : MonoBehaviour
 
     [SerializeField] private float cameraFirstPersonStartZ;
 
-    [SerializeField] private float cameraFirstPersonStartRotX;
-
-    [SerializeField] private float cameraFirstPersonStartRotY;
-
-    [SerializeField] private float lerpRotSpeed;
-
     [SerializeField] private float lerpPosSpeed;
 
     [SerializeField] private float waitBeforeLerpingCamera;

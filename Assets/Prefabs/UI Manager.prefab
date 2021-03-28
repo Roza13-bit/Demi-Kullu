@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 0
   m_Name: UI Manager
   m_TagString: Untagged
-  m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -47,6 +47,9 @@ MonoBehaviour:
   gameSceneCanvas: {fileID: 0}
   playButton: {fileID: 0}
   startPlayTimerTMP: {fileID: 0}
+  heavyCDTimerTMP: {fileID: 0}
+  ultimateCDTimerTMP: {fileID: 0}
+  aimCrosshair: {fileID: 0}
   lightAttackSO: {fileID: 0}
   lightAttackButton: {fileID: 0}
   heavyAttackSO: {fileID: 0}

@@ -11,7 +11,15 @@ public class GameManager : MonoBehaviour
 
     public List<Transform> activeGatesList = new List<Transform>();
 
+    public List<GameObject> touchedTargetsList = new List<GameObject>();
+
     public GameObject heroPrefab;
+
+    public SkillScriptableObject lightAttackSO;
+
+    public SkillScriptableObject heavyAttackSO;
+
+    public SkillScriptableObject ultimateAttackSO;
 
     public void StartTargetsMovement()
     {
@@ -32,6 +40,32 @@ public class GameManager : MonoBehaviour
     public void EnableHeroControllerScript()
     {
         heroPrefab.GetComponent<HeroController>().enabled = true;
+
+    }
+
+    public void TargetsListHeavyDamage()
+    {
+        foreach (GameObject target in touchedTargetsList)
+        {
+            target.GetComponent<TargetController>().UpdateSliderValue(heavyAttackSO.skillDamage);
+
+            Debug.Log("Minus " + heavyAttackSO.skillDamage + " Damage");
+
+        }
+
+    }
+
+    public void TargetsListUltimateDamage()
+    {
+        Debug.Log("Ultimate damage.");
+
+        foreach (GameObject target in activeTargetsList)
+        {
+            target.GetComponent<TargetController>().UpdateSliderValue(ultimateAttackSO.skillDamage);
+
+            Debug.Log("Minus " + ultimateAttackSO.skillDamage + " Damage");
+
+        }
 
     }
 

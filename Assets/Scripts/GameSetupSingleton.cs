@@ -41,6 +41,12 @@ public class GameSetupSingleton : MonoBehaviour
 
         uiManagerSC.ultimateAttackSO = heroPrefabSO.ultimateAttackSO;
 
+        gameManagerSC.lightAttackSO = heroPrefabSO.lightAttackSO;
+
+        gameManagerSC.heavyAttackSO = heroPrefabSO.heavyAttackSO;
+
+        gameManagerSC.ultimateAttackSO = heroPrefabSO.ultimateAttackSO;
+
         _heroPrefab = Instantiate(heroPrefabSO.heroPrefab);
 
         gameManagerSC.heroPrefab = _heroPrefab;

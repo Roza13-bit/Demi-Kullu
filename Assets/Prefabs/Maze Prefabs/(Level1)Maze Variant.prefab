@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 131745436}
   - component: {fileID: 4221653299233408282}
   - component: {fileID: 1734028661335099252}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MazePart (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 420476846}
   - component: {fileID: 5344705632622222435}
   - component: {fileID: 7038618466635152130}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MazePart (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 439101580}
   - component: {fileID: 3171559768544403819}
   - component: {fileID: 3160126167431669206}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MazePart (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -395,7 +395,7 @@ GameObject:
   - component: {fileID: 830148692}
   - component: {fileID: 5408860513227035295}
   - component: {fileID: 2614468376483049109}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MazePart (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -522,7 +522,7 @@ GameObject:
   - component: {fileID: 1007630588}
   - component: {fileID: 7852965867676200435}
   - component: {fileID: 7397580958623060470}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MazePart (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -743,7 +743,7 @@ GameObject:
   - component: {fileID: 1084021312}
   - component: {fileID: 6877068000674808196}
   - component: {fileID: 5469269103614174995}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MazePart (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -870,7 +870,7 @@ GameObject:
   - component: {fileID: 1270820453}
   - component: {fileID: 5584348929334900151}
   - component: {fileID: 5684043651491623946}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: 'MazePart '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1091,7 +1091,7 @@ GameObject:
   - component: {fileID: 1887293936}
   - component: {fileID: 4901683889505360649}
   - component: {fileID: 841576488799487357}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MazePart (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1218,7 +1218,7 @@ GameObject:
   - component: {fileID: 1967828431}
   - component: {fileID: 862592719752444935}
   - component: {fileID: 2944792816987928770}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MazePart (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

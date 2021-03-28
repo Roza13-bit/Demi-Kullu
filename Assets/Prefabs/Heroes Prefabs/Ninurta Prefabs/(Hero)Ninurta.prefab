@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5852147539413996019}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: HeavyAttackAimDome
   m_TagString: HeavyAttackParticle
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
@@ -43,9 +43,9 @@ GameObject:
   - component: {fileID: 5410142950213712062}
   - component: {fileID: 1782542364345373061}
   - component: {fileID: 7610238224325360989}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: AimDome
-  m_TagString: Untagged
+  m_TagString: GroundShutter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: -987219527383742924}
-        m_MethodName: StopLightAttack
+        m_MethodName: ShootUltimateAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -212,14 +212,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  cameraAimSpeed: 0.027
+  cameraAimSpeed: 0.02
   direction: 1
-  cameraZoomSpeed: 1
+  cameraZoomSpeed: 1.5
   upDownClampAngleMin: 10
   upDownClampAngleMax: 65
   leftRightClampAngle: 60
   leftProjectileOffset: 2.5
   upProjectileOffset: -3.3
+  ignoreMask:
+    serializedVersion: 2
+    m_Bits: 1024
   _heavyAttackAimDomeGO: {fileID: 5852147539413996019}
 --- !u!1 &6501026109971781861
 GameObject:
