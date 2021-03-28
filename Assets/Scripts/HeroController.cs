@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UIClass;
 
@@ -53,6 +55,10 @@ public class HeroController : MonoBehaviour
 
     private List<GameObject> _lightAttackPoolList = new List<GameObject>();
 
+    static bool _lightAttackActive;
+
+    [SerializeField] private Transform _heavyAttackAimDomeGO;
+
     // Camera swiping variables.
 
     private Touch initTouch = new Touch();
@@ -67,12 +73,16 @@ public class HeroController : MonoBehaviour
 
     private GameObject aimCrosshair;
 
+    private EventSystem _eventSystem;
+
     // Initializing the class.
     private void Start()
     {
         _lightAttackShootingGO = transform.Find("LightAttackTransformGO");
 
         firstPersonCamera = FindObjectOfType<Camera>();
+
+        _eventSystem = FindObjectOfType<EventSystem>();
 
         _lightAttackShootingGO.transform.forward = firstPersonCamera.transform.forward;
 
@@ -86,57 +96,115 @@ public class HeroController : MonoBehaviour
 
         aimCrosshair = _uiManagerSC.aimCrosshair;
 
+        _lightAttackActive = true;
+
     }
 
     // In fixed update, we listen to a touches from the user.
     // The user can swipe to rotate the camera.
-    private void FixedUpdate()
+    private void Update()
     {
-        foreach (Touch touch in Input.touches)
+        if (Input.touchCount > 0)
         {
-            if (touch.phase == TouchPhase.Began)
+            // EventSystem.current.IsPointerOverGameObject(touch.fingerId) &&
+            // EventSystem.current.currentSelectedGameObject.GetComponent<CanvasRenderer>() != null
+
+            for (int x = 0; x < Input.touchCount; x++)
             {
-                initTouch = touch;
+                var touch = Input.touches[x];
 
-                StartCoroutine(ZoomInCameraWhileShooting());
+                if (touch.phase == TouchPhase.Began && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
+                {
+                    Debug.Log("Touch start " + touch.fingerId);
 
-                aimCrosshair.SetActive(true);
+                    initTouch = touch;
 
-                PlayLightAttack();
+                    StartCoroutine(ZoomInCameraWhileShooting());
 
-            }
-            else if (touch.phase == TouchPhase.Moved)
-            {
-                float deltaX = initTouch.position.x - touch.position.x;
+                    aimCrosshair.SetActive(true);
 
-                float deltaY = initTouch.position.y - touch.position.y;
+                    PlayLightAttack();
 
-                rotX -= deltaX * Time.deltaTime * cameraAimSpeed * direction;
+                }
+                else if (touch.phase == TouchPhase.Moved && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
+                {
+                    // Debug.Log("Touch moving " + touch.fingerId);
 
-                rotY += deltaY * Time.deltaTime * cameraAimSpeed * direction;
+                    float deltaX = initTouch.position.x - touch.position.x;
 
-                rotX = Mathf.Clamp(rotX, -leftRightClampAngle, leftRightClampAngle);
+                    float deltaY = initTouch.position.y - touch.position.y;
 
-                rotY = Mathf.Clamp(rotY, upDownClampAngleMin, upDownClampAngleMax);
-                
-                firstPersonCamera.transform.eulerAngles = new Vector3(rotY, rotX, 0f);
+                    rotX -= deltaX * Time.deltaTime * cameraAimSpeed * direction;
 
-                _lightAttackShootingGO.transform.eulerAngles = new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset, firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
+                    rotY += deltaY * Time.deltaTime * cameraAimSpeed * direction;
 
-            }
-            else if (touch.phase == TouchPhase.Ended)
-            {
-                StopLightAttack();
+                    rotX = Mathf.Clamp(rotX, -leftRightClampAngle, leftRightClampAngle);
 
-                aimCrosshair.SetActive(false);
+                    rotY = Mathf.Clamp(rotY, upDownClampAngleMin, upDownClampAngleMax);
 
-                StartCoroutine(ZoomOutCameraWhileNotShooting());
+                    firstPersonCamera.transform.eulerAngles = new Vector3(rotY, rotX, 0f);
 
-                initTouch = new Touch();
+                    _lightAttackShootingGO.transform.eulerAngles = new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset, firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
+
+                }
+                else if (touch.phase == TouchPhase.Ended && !IsTouchOnUIElement(touch.position))
+                {
+                    Debug.Log("Touch ended " + touch.fingerId);
+
+                    Debug.Log("Touch count " + Input.touchCount);
+
+                    if (!_lightAttackActive)
+                    {
+                        ShootHeavyAttack();
+
+                        StartCoroutine(ZoomOutCameraWhileNotShooting());
+
+                        initTouch = new Touch();
+
+                    }
+                    else if (_lightAttackActive)
+                    {
+                        StopLightAttack();
+
+                        StartCoroutine(ZoomOutCameraWhileNotShooting());
+
+                        initTouch = new Touch();
+
+                    }
+
+                }
 
             }
 
         }
+
+    }
+
+    private bool IsTouchOnUIElement(Vector3 touchPos)
+    {
+        bool isOnUI = true;
+
+        PointerEventData ped = new PointerEventData(EventSystem.current);
+
+        ped.position = touchPos;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        EventSystem.current.RaycastAll(ped, results);
+
+        if (results.Count == 0)
+        {
+            isOnUI = false;
+
+        }
+        else
+        {
+            isOnUI = true;
+        }
+
+        Debug.Log("Is touch on ui? " + isOnUI.ToString());
+
+        return isOnUI;
 
     }
 
@@ -250,6 +318,8 @@ public class HeroController : MonoBehaviour
 
         }
 
+        aimCrosshair.SetActive(false);
+
     }
 
     // Reset a projectile that touched the shredder collider.
@@ -281,23 +351,54 @@ public class HeroController : MonoBehaviour
     {
         for (int x = 0; x < _lightAttackPoolList.Count; x++)
         {
-            if (!_lightAttackPoolList[x].activeSelf)
+            if (_lightAttackActive)
             {
-                var instance = _lightAttackPoolList[x];
+                if (!_lightAttackPoolList[x].activeSelf)
+                {
+                    var instance = _lightAttackPoolList[x];
 
-                instance.SetActive(true);
+                    instance.SetActive(true);
 
-                instance.GetComponent<Rigidbody>().isKinematic = false;
+                    instance.GetComponent<Rigidbody>().isKinematic = false;
 
-                instance.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                    instance.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-                LightAttackAddProjectileForce(instance);
+                    LightAttackAddProjectileForce(instance);
 
-                x = 0;
+                    x = 0;
+
+                }
+
+                yield return new WaitForSeconds(cooldown);
 
             }
+            else if (!_lightAttackActive)
+            {
+                Ray ray = new Ray();
 
-            yield return new WaitForSeconds(cooldown);
+                RaycastHit hit;
+
+                ray.origin = firstPersonCamera.transform.position;
+
+                ray.direction = firstPersonCamera.transform.forward;
+
+                Debug.DrawRay(ray.origin, ray.direction * 10, Color.blue, 1f);
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.collider.CompareTag("FightGround"))
+                    {
+                        _heavyAttackAimDomeGO.position = new Vector3(hit.point.x, -5f, hit.point.z);
+
+                    }
+
+                }
+                    
+                x = 0;
+
+                yield return null;
+
+            }
 
         }
 
@@ -308,19 +409,56 @@ public class HeroController : MonoBehaviour
     {
         go.GetComponent<Rigidbody>().mass = _lightAttackSO.skillMass;
 
-        go.GetComponent<Rigidbody>().velocity =  _lightAttackShootingGO.forward * _lightAttackSO.skillSpeed;
+        go.GetComponent<Rigidbody>().velocity = _lightAttackShootingGO.forward * _lightAttackSO.skillSpeed;
 
     }
 
     // ~~ Heavy attack functions. ~~
 
+    // Invoke heavy attack event, press down heavy attack button.
     public void HeavyAttackShootingState()
     {
-        HeavyAttackEvent.Invoke();
-
         _uiManagerSC = FindObjectOfType<UIManager>();
 
         _uiManagerSC.SetHeavyAttackPressed();
+
+        HeavyAttackEvent.Invoke();
+
+    }
+
+    public void StartHeavyAttackAimAndShoot()
+    {
+        Debug.Log("Heavy event");
+
+        _lightAttackActive = false;
+
+        Debug.Log(_lightAttackActive);
+
+    }
+
+    private void ShootHeavyAttack()
+    {
+        _lightAttackActive = true;
+
+        Debug.Log(_lightAttackActive);
+
+        _heavyAttackAimDomeGO.localPosition = new Vector3(0f, 0f, 400f);
+
+        StopAllCoroutines();
+
+        foreach (GameObject go in _lightAttackPoolList)
+        {
+            go.SetActive(false);
+
+            go.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+
+            go.GetComponent<Rigidbody>().isKinematic = true;
+
+            go.transform.localPosition = Vector3.zero;
+
+        }
+
+        aimCrosshair.SetActive(false);
 
     }
 

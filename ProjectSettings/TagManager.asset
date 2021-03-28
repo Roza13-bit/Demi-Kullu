@@ -9,6 +9,10 @@ TagManager:
   - UIManager
   - AttackTransform
   - PowerShank
+  - UI
+  - LightAttackParticle
+  - FightGround
+  - HeavyAttackParticle
   layers:
   - Default
   - TransparentFX
