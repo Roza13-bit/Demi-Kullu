@@ -71,8 +71,6 @@ public class HeroController : MonoBehaviour
 
     // Camera swiping variables.
 
-    private Touch initTouch = new Touch();
-
     private Camera firstPersonCamera;
 
     private float rotX = 0f;
@@ -84,6 +82,8 @@ public class HeroController : MonoBehaviour
     private GameObject aimCrosshair;
 
     private EventSystem _eventSystem;
+
+    private bool zoomCameraBool;
 
     // Initializing the class.
     private void Start()
@@ -102,11 +102,11 @@ public class HeroController : MonoBehaviour
 
         originalRot = firstPersonCamera.transform.eulerAngles;
 
-        rotY = originalRot.x;
+        rotY = originalRot.y;
+
+        rotX = originalRot.x;
 
         Debug.Log("rotX : " + rotX);
-
-        rotX = originalRot.y;
 
         Debug.Log("rotY : " + rotY);
 
@@ -133,8 +133,6 @@ public class HeroController : MonoBehaviour
                 {
                     Debug.Log("Touch start " + touch.fingerId);
 
-                    initTouch = touch;
-
                     StartCoroutine(ZoomInCameraWhileShooting());
 
                     aimCrosshair.SetActive(true);
@@ -144,21 +142,21 @@ public class HeroController : MonoBehaviour
                 }
                 else if (touch.phase == TouchPhase.Moved && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
                 {
-                    // Debug.Log("Touch moving " + touch.fingerId);
+                    rotX -= touch.deltaPosition.y * Time.deltaTime * cameraAimSpeed * direction;
 
-                    float deltaX = initTouch.position.x - touch.position.x;
+                    rotY += touch.deltaPosition.x * Time.deltaTime * cameraAimSpeed * direction;
 
-                    float deltaY = initTouch.position.y - touch.position.y;
+                    // Debug.Log(" rotX : " + rotX + " rotY : " + rotY);
 
-                    rotX -= deltaX * Time.deltaTime * cameraAimSpeed * direction;
+                    rotY = Mathf.Clamp(rotY, -leftRightClampAngle, leftRightClampAngle);
 
-                    rotY += deltaY * Time.deltaTime * cameraAimSpeed * direction;
+                    rotX = Mathf.Clamp(rotX, upDownClampAngleMin, upDownClampAngleMax);
 
-                    rotX = Mathf.Clamp(rotX, -leftRightClampAngle, leftRightClampAngle);
+                    // Debug.Log(" firstPersonCamera.transform.eulerAngles (Before) : " + firstPersonCamera.transform.eulerAngles);
 
-                    rotY = Mathf.Clamp(rotY, upDownClampAngleMin, upDownClampAngleMax);
+                    firstPersonCamera.transform.eulerAngles = new Vector3(rotX, rotY, 0f);
 
-                    firstPersonCamera.transform.eulerAngles = new Vector3(rotY, rotX, 0f);
+                    // Debug.Log(" firstPersonCamera.transform.eulerAngles (After) : " + firstPersonCamera.transform.eulerAngles);
 
                     _lightAttackShootingGO.transform.eulerAngles = new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset, firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
 
@@ -173,18 +171,14 @@ public class HeroController : MonoBehaviour
                     {
                         ShootHeavyAttack();
 
-                        StartCoroutine(ZoomOutCameraWhileNotShooting());
-
-                        initTouch = new Touch();
+                        StartCoroutine(ZoomOutCameraCountdownTimer());
 
                     }
                     else if (_lightAttackActive)
                     {
                         StopLightAttack();
 
-                        StartCoroutine(ZoomOutCameraWhileNotShooting());
-
-                        initTouch = new Touch();
+                        StartCoroutine(ZoomOutCameraCountdownTimer());
 
                     }
 
@@ -255,11 +249,29 @@ public class HeroController : MonoBehaviour
 
         }
 
-        zoomInCoroutine = ZoomInCameraWhileShooting();
-
-        zoomOutCoroutine = ZoomOutCameraWhileNotShooting();
-
         shootingCoroutine = LightAttackShootingCoroutine(_lightAttackSO.skillCooldown);
+
+    }
+
+    private IEnumerator ZoomOutCameraCountdownTimer()
+    {
+        zoomCameraBool = true;
+
+        for (int x = 0; x < 4; x++)
+        {
+            Debug.Log(x);
+
+            yield return new WaitForSeconds(1);
+
+            if (!zoomCameraBool)
+            {
+                yield break;
+
+            }
+
+        }
+
+        StartCoroutine(ZoomOutCameraWhileNotShooting());
 
     }
 
@@ -267,8 +279,6 @@ public class HeroController : MonoBehaviour
     // Starts after a small wait time.
     private IEnumerator ZoomOutCameraWhileNotShooting()
     {
-        StopCoroutine(zoomInCoroutine);
-
         var timeSinceStartedZoomOut = 0.0f;
 
         while (true)
@@ -283,7 +293,7 @@ public class HeroController : MonoBehaviour
 
             }
 
-            yield return new WaitForFixedUpdate();
+            yield return null;
 
         }
 
@@ -292,7 +302,7 @@ public class HeroController : MonoBehaviour
     // Zoom in the camera field of view, while the player is shooting.
     private IEnumerator ZoomInCameraWhileShooting()
     {
-        StopCoroutine(zoomOutCoroutine);
+        zoomCameraBool = false;
 
         var timeSinceStartedZoomIn = 0.0f;
 
@@ -308,7 +318,7 @@ public class HeroController : MonoBehaviour
 
             }
 
-            yield return new WaitForFixedUpdate();
+            yield return null;
 
         }
 

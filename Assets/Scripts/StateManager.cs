@@ -15,6 +15,8 @@ public class StateManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Target frame rate = " + Application.targetFrameRate);
+
         // Invoke game started event. 
         // This event instantiats the starting objects & settings. 
         GameStartedEvent.Invoke();

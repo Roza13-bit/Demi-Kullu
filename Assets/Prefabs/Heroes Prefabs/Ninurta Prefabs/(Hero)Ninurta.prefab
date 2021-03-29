@@ -212,7 +212,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  cameraAimSpeed: 0.02
+  cameraAimSpeed: 1.5
   direction: 1
   cameraZoomSpeed: 1.5
   upDownClampAngleMin: 10
@@ -224,6 +224,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   _heavyAttackAimDomeGO: {fileID: 5852147539413996019}
+  smoothTime: 0
 --- !u!1 &6501026109971781861
 GameObject:
   m_ObjectHideFlags: 0
