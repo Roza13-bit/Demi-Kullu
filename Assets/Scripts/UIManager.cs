@@ -23,6 +23,10 @@ namespace UIClass
 
         [SerializeField] private TextMeshProUGUI ultimateCDTimerTMP;
 
+        [SerializeField] private TextMeshProUGUI strikeCounterTMP;
+
+        private static TextMeshProUGUI strikeCounterTMPStatic;
+
         public GameObject aimCrosshair;
 
         [Header("Public Variables")]
@@ -53,6 +57,8 @@ namespace UIClass
 
         private Sprite _ultimateAttackSpritePressed;
 
+        private static int _strikeCounter;
+
         // private GameObject _gameSceneCanvas;
 
         // Sets the game canvas active. 
@@ -63,7 +69,14 @@ namespace UIClass
 
             SetAttackButtonsSprites();
 
+            _strikeCounter = 0;
+
+            strikeCounterTMPStatic = strikeCounterTMP;
+
+            strikeCounterTMPStatic.text = "" + 0;
+
         }
+
 
         // Set the play button to inactive.
         // Play the game start countdown.
@@ -76,6 +89,7 @@ namespace UIClass
             StartCoroutine(StartPlayTimer());
 
         }
+
 
         // Game start countdown coroutine.
         public IEnumerator StartPlayTimer()
@@ -105,6 +119,7 @@ namespace UIClass
 
         }
 
+
         // Sets all of the button sprites, from the scriptable
         // objects into the private variables.
         public void SetAttackButtonsSprites()
@@ -128,6 +143,7 @@ namespace UIClass
             ultimateAttackButton.image.sprite = _ultimateAttackSpriteMain;
 
         }
+
         
         // Sets the heavy attack button to pressed sprite.
         public void SetHeavyAttackPressed()
@@ -136,12 +152,14 @@ namespace UIClass
 
         }
 
+
         // Sets the heavy attack button to unpressed sprite.
         public void SetHeavyAttackUnpressed()
         {
             heavyAttackButton.image.sprite = _heavyAttackSpriteMain;
 
         }
+
 
         // Starts the cooldown timer for the heavy attack.
         // Makes the heavy attack button unclickable.
@@ -168,6 +186,7 @@ namespace UIClass
 
         }
 
+
         // Sets the ultimate attack button to pressed sprite.
         public void SetUltimateAttackPressed()
         {
@@ -177,6 +196,7 @@ namespace UIClass
 
         }
 
+
         // Sets the ultimate attack button to unpressed sprite.
         public void SetUltimateAttackUnpressed()
         {
@@ -185,6 +205,7 @@ namespace UIClass
             ultimateAttackButton.image.sprite = _ultimateAttackSpriteMain;
 
         }
+
 
         // Starts the cooldown timer for the ultimate attack.
         // Makes the ultimate attack button unclickable.
@@ -216,6 +237,16 @@ namespace UIClass
             ultimateAttackButton.interactable = true;
 
             SetUltimateAttackUnpressed();
+
+        }
+
+
+        // Add 1 strike to the strike counter.
+        public static void AddStrikeToStrikeCounter()
+        {
+            _strikeCounter++;
+
+            strikeCounterTMPStatic.text = "" + _strikeCounter;
 
         }
 

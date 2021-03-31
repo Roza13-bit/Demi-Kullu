@@ -106,15 +106,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.5
+    agentRadius: 0.8
     agentHeight: 2
-    agentSlope: 45
+    agentSlope: 35
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.16666667
+    cellSize: 0.26666668
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.26666668
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: fb8d10653d526034697c0f2c11e2cde0, type: 2}
 --- !u!4 &69001671
@@ -438,13 +438,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c53fd5cb5b55f0b438b14ce7349a7552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateManagerSC: {fileID: 962749133}
+  heroPrefab: {fileID: 0}
+  newTargetsList: []
   activeTargetsList: []
   activeGatesList: []
   touchedTargetsList: []
-  heroPrefab: {fileID: 0}
+  targetSpawnTransformList: []
   lightAttackSO: {fileID: 0}
   heavyAttackSO: {fileID: 0}
   ultimateAttackSO: {fileID: 0}
+  levelStatsSO: {fileID: 0}
+  targetGenericSO: {fileID: 0}
+  targetSkinnySO: {fileID: 0}
+  targetFatSO: {fileID: 0}
 --- !u!1 &705368879
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,6 +588,12 @@ GameObject:
 --- !u!1 &921504142 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8810270863420157733, guid: bfca539663467604f93dd05ec65a7c0f,
+    type: 3}
+  m_PrefabInstance: {fileID: 8810270863129372331}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &921504146 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8810270863420157753, guid: bfca539663467604f93dd05ec65a7c0f,
     type: 3}
   m_PrefabInstance: {fileID: 8810270863129372331}
   m_PrefabAsset: {fileID: 0}
@@ -726,6 +739,53 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 243358432}
         m_MethodName: SetupHeroController
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  SpawningStartedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 653900839}
+        m_MethodName: StartGameLoopTimerEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 653900839}
+        m_MethodName: StartSpawningGenericTargetsEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 653900839}
+        m_MethodName: StartSpawningSkinnyTargetsEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 653900839}
+        m_MethodName: StartSpawningFatTargetsEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1247,6 +1307,139 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!1 &1721600263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1721600264}
+  - component: {fileID: 1721600266}
+  - component: {fileID: 1721600265}
+  m_Layer: 5
+  m_Name: strikesCounterTMP
+  m_TagString: Untagged
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1721600264
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721600263}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 921504146}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 200, y: -100}
+  m_SizeDelta: {x: 400, y: 200}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1721600265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721600263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 00
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: dcbd5f0e8389dc84189566b5e58e74a2, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 150
+  m_fontSizeBase: 150
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 1
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1721600266
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721600263}
+  m_CullTransparentMesh: 0
 --- !u!1 &1746911657
 GameObject:
   m_ObjectHideFlags: 0
@@ -1785,7 +1978,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroPrefabSO: {fileID: 11400000, guid: a5d087778ead5dd4e889999ba5ce8219, type: 2}
-  targetPrefabSO: {fileID: 11400000, guid: 1f0ea03ff06028b4883f597e7edc4b25, type: 2}
+  targetGenericSO: {fileID: 11400000, guid: 1f0ea03ff06028b4883f597e7edc4b25, type: 2}
+  targetSkinnySO: {fileID: 11400000, guid: dd6b1e8a0bd06814a9f17d910f9e5792, type: 2}
+  targetFatSO: {fileID: 11400000, guid: f45da7309464f934a9b1529712e378e2, type: 2}
+  levelStatsSO: {fileID: 11400000, guid: eda9265694e13fb4fa30ce536e9fb527, type: 2}
   mazePrefab: {fileID: 6608186036820115506, guid: e9258788cc784d54285ee93d767c4850,
     type: 3}
   gameManagerSC: {fileID: 653900839}
@@ -1949,7 +2145,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 2800000, guid: e17ee60887efdd04389991a15ee0c578, type: 3}
   m_NavMeshLayer: 18
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2126966012
 Transform:
@@ -2211,6 +2407,11 @@ PrefabInstance:
       propertyPath: ultimateAttackButton
       value: 
       objectReference: {fileID: 1486768624}
+    - target: {fileID: 5774631561084344788, guid: 5197e03f1e6095b4a8197f51adead0f1,
+        type: 3}
+      propertyPath: strikeCounterTMP
+      value: 
+      objectReference: {fileID: 1721600265}
     - target: {fileID: 5774631561084344789, guid: 5197e03f1e6095b4a8197f51adead0f1,
         type: 3}
       propertyPath: m_LocalPosition.x

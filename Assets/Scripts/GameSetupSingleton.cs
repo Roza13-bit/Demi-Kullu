@@ -10,7 +10,13 @@ public class GameSetupSingleton : MonoBehaviour
 
     [SerializeField] private HeroScriptableObject heroPrefabSO;
 
-    [SerializeField] private TargetScriptableObject targetPrefabSO;
+    [SerializeField] private TargetScriptableObject targetGenericSO;
+
+    [SerializeField] private TargetScriptableObject targetSkinnySO;
+
+    [SerializeField] private TargetScriptableObject targetFatSO;
+
+    [SerializeField] private LevelStatsScriptableObject levelStatsSO;
 
     [SerializeField] private GameObject mazePrefab;
 
@@ -22,11 +28,9 @@ public class GameSetupSingleton : MonoBehaviour
 
     // Private Variables.
 
-    private List<Transform> targetSpawnTransformList = new List<Transform>();
-
     private GameObject _heroPrefab;
 
-    private GameObject _targetPrefab;
+    private GameObject _targetGenericPrefab;
 
     private GameObject _mazePrefab;
 
@@ -47,6 +51,14 @@ public class GameSetupSingleton : MonoBehaviour
 
         gameManagerSC.ultimateAttackSO = heroPrefabSO.ultimateAttackSO;
 
+        gameManagerSC.levelStatsSO = levelStatsSO;
+
+        gameManagerSC.targetGenericSO = targetGenericSO;
+
+        gameManagerSC.targetSkinnySO = targetSkinnySO;
+
+        gameManagerSC.targetFatSO = targetFatSO;
+
         _heroPrefab = Instantiate(heroPrefabSO.heroPrefab);
 
         gameManagerSC.heroPrefab = _heroPrefab;
@@ -57,9 +69,9 @@ public class GameSetupSingleton : MonoBehaviour
         {
             if (child.CompareTag("Spawn"))
             {
-                targetSpawnTransformList.Add(child);
+                gameManagerSC.targetSpawnTransformList.Add(child);
 
-                Debug.Log("Number of transform points found : " + targetSpawnTransformList.Count);
+                Debug.Log("Number of transform points found : " + gameManagerSC.targetSpawnTransformList.Count);
 
             }
             else if (child.CompareTag("EndGate"))
@@ -70,11 +82,11 @@ public class GameSetupSingleton : MonoBehaviour
 
         }
 
-        for (int x = 0; x < targetSpawnTransformList.Count; x++)
+        for (int x = 0; x < gameManagerSC.targetSpawnTransformList.Count; x++)
         {
-            _targetPrefab = Instantiate(targetPrefabSO.targetPrefab);
+            _targetGenericPrefab = Instantiate(targetGenericSO.targetPrefab);
 
-            gameManagerSC.activeTargetsList.Add(_targetPrefab);
+            gameManagerSC.activeTargetsList.Add(_targetGenericPrefab);
 
             Debug.Log("Number of active targets found : " + gameManagerSC.activeTargetsList.Count);
 
@@ -84,20 +96,23 @@ public class GameSetupSingleton : MonoBehaviour
 
     }
 
+
     // Position the targets to the maze spawn transform points.
     // Rotate the targets to the spawn point rotation.
     public void PositionGameObjects()
     {
-        for (int x = 0; x < targetSpawnTransformList.Count; x++)
+        for (int x = 0; x < gameManagerSC.targetSpawnTransformList.Count; x++)
         {
-            gameManagerSC.activeTargetsList[x].transform.position = targetSpawnTransformList[x].transform.position;
+            gameManagerSC.activeTargetsList[x].transform.position = gameManagerSC.targetSpawnTransformList[x].transform.position;
 
-            gameManagerSC.activeTargetsList[x].transform.rotation = targetSpawnTransformList[x].transform.rotation;
+            gameManagerSC.activeTargetsList[x].transform.rotation = gameManagerSC.targetSpawnTransformList[x].transform.rotation;
 
         }
 
     }
 
+
+    // Destroy the setup singelton.
     public void SwitchStateFromGameToPlay()
     {
         // stateManagerSC.PlayStartedEvent.Invoke();

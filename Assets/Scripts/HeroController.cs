@@ -116,6 +116,7 @@ public class HeroController : MonoBehaviour
 
     }
 
+
     // In fixed update, we listen to a touches from the user.
     // The user can swipe to rotate the camera.
     private void Update()
@@ -125,7 +126,7 @@ public class HeroController : MonoBehaviour
             // EventSystem.current.IsPointerOverGameObject(touch.fingerId) &&
             // EventSystem.current.currentSelectedGameObject.GetComponent<CanvasRenderer>() != null
 
-            for (int x = 0; x < Input.touchCount; x++)
+            for (int x = 0; x < 1; x++)
             {
                 var touch = Input.touches[x];
 
@@ -190,6 +191,8 @@ public class HeroController : MonoBehaviour
 
     }
 
+
+    // A function that checks if a touch is on ui element. (Universal function)
     private bool IsTouchOnUIElement(Vector3 touchPos)
     {
         bool isOnUI = true;
@@ -217,6 +220,7 @@ public class HeroController : MonoBehaviour
         return isOnUI;
 
     }
+
 
     // Draw the scriptable attack scripts from the UIManager to local variables.
     private void SetupAttacks()
@@ -253,6 +257,9 @@ public class HeroController : MonoBehaviour
 
     }
 
+
+    // Countdown coroutine that get's cancelled if the user clicks the screen.
+    // If the user hasn't clicked for 4 seconds, zoom out camera.
     private IEnumerator ZoomOutCameraCountdownTimer()
     {
         zoomCameraBool = true;
@@ -274,6 +281,7 @@ public class HeroController : MonoBehaviour
         StartCoroutine(ZoomOutCameraWhileNotShooting());
 
     }
+
 
     // Zoom out the camera field of view, while the player is not aiming. 
     // Starts after a small wait time.
@@ -298,6 +306,7 @@ public class HeroController : MonoBehaviour
         }
 
     }
+
 
     // Zoom in the camera field of view, while the player is shooting.
     private IEnumerator ZoomInCameraWhileShooting()
@@ -324,7 +333,8 @@ public class HeroController : MonoBehaviour
 
     }
 
-    // ~~ Light attack functions. ~~
+
+            // ~~ Light attack functions. ~~
 
     // Start shooting the light attack.
     public void PlayLightAttack()
@@ -332,6 +342,7 @@ public class HeroController : MonoBehaviour
         StartCoroutine(shootingCoroutine);
 
     }
+
 
     // Stop and reset the light attack.
     public void StopLightAttack()
@@ -354,6 +365,7 @@ public class HeroController : MonoBehaviour
 
     }
 
+
     // Reset a projectile that touched the shredder collider.
     // This is the function that resets objects for the object pooling system.
     public void LightAttackResetSoloProjectile(GameObject projectile)
@@ -375,6 +387,7 @@ public class HeroController : MonoBehaviour
         }
 
     }
+
 
     // Activate the projectile shooting loop.
     // This function waits the cooldown time, and than activates and shoots
@@ -436,6 +449,7 @@ public class HeroController : MonoBehaviour
 
     }
 
+
     // Add physical force the the projectile (shoot it).
     private void LightAttackAddProjectileForce(GameObject go)
     {
@@ -445,7 +459,8 @@ public class HeroController : MonoBehaviour
 
     }
 
-    // ~~ Heavy attack functions. ~~
+
+            // ~~ Heavy attack functions. ~~
 
     // Invoke heavy attack event, press down heavy attack button.
     public void HeavyAttackShootingState()
@@ -458,6 +473,7 @@ public class HeroController : MonoBehaviour
 
     }
 
+
     // Change the shooting state to heavy attack mode.
     public void StartHeavyAttackAimAndShoot()
     {
@@ -465,27 +481,22 @@ public class HeroController : MonoBehaviour
 
         _lightAttackActive = false;
 
-        Debug.Log(_lightAttackActive);
-
     }
+
 
     // Do the actual damage to the targets that are
     // touching the heavy attack aim dome.
     private void ShootHeavyAttack()
     {
-        StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
+        StopCoroutine(shootingCoroutine);
 
         _lightAttackActive = true;
 
-        Debug.Log(_lightAttackActive);
+        _gameManagerSC.TargetsListHeavyDamage();
 
         _heavyAttackAimDomeGO.localPosition = new Vector3(0f, 0f, 400f);
 
-        _gameManagerSC.TargetsListHeavyDamage();
-
-        aimCrosshair.SetActive(false);
-
-        StopCoroutine(shootingCoroutine);
+        StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
 
         foreach (GameObject go in _lightAttackPoolList)
         {
@@ -501,7 +512,8 @@ public class HeroController : MonoBehaviour
 
     }
 
-    // ~~ Ultimate attack functions. ~~
+
+            // ~~ Ultimate attack functions. ~~
 
     // Set ultimate attack button to pressed.
     // Invoke ultimate attack event.
@@ -515,6 +527,7 @@ public class HeroController : MonoBehaviour
 
     }
 
+
     // Shoot ultimate attack.
     // Start ultimate attack cd.
     public void ShootUltimateAttack()
@@ -526,5 +539,6 @@ public class HeroController : MonoBehaviour
         _gameManagerSC.TargetsListUltimateDamage();
 
     }
+
 
 }

@@ -13,6 +13,8 @@ public class StateManager : MonoBehaviour
 
     public UnityEvent PlayStartedEvent;
 
+    public UnityEvent SpawningStartedEvent;
+
     private void Awake()
     {
         Debug.Log("Target frame rate = " + Application.targetFrameRate);
@@ -26,6 +28,12 @@ public class StateManager : MonoBehaviour
     public void StartGameLoadedState()
     {
         GameLoadedEvent.Invoke();
+
+    }
+
+    public void StartSpawningStartedState()
+    {
+        SpawningStartedEvent.Invoke();
 
     }
 

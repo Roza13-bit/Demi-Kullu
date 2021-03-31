@@ -8,10 +8,4 @@ public class TargetScriptableObject : ScriptableObject
 {
     public GameObject targetPrefab;
 
-    public float targetSpeed;
-
-    public float targetAccelaration;
-
-    public float targetHealth;
-
 }

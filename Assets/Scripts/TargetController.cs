@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using UnityEngine.Events;
+using UIClass;
 
 public class TargetController : MonoBehaviour
 {
@@ -12,26 +14,22 @@ public class TargetController : MonoBehaviour
 
     private GameManager _gameManagerSC;
 
-    private NavMeshAgent targetNavmesh;
-
     private Slider healthSlider;
 
+    // Initialize the target controller variables.
     private void Start()
     {
         _gameManagerSC = FindObjectOfType<GameManager>();
 
-        targetNavmesh = gameObject.GetComponent<NavMeshAgent>();
-
         healthSlider = gameObject.GetComponentInChildren<Slider>();
-
-        targetNavmesh.isStopped = true;
-
-        health = 100f;
 
         StartHealthBarSetup();
 
     }
 
+
+    // On trigger enter, deal basic attack damage, or
+    // add the target to touched heavy attack targets list.
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PowerShank"))
@@ -52,9 +50,20 @@ public class TargetController : MonoBehaviour
             Debug.Log("Touched targets list length : " + _gameManagerSC.touchedTargetsList.Count);
 
         }
+        else if (other.CompareTag("EndGate"))
+        {
+            UIManager.AddStrikeToStrikeCounter();
+
+            _gameManagerSC.activeTargetsList.Remove(gameObject);
+
+            Destroy(gameObject);
+
+        }
 
     }
 
+
+    // On trigger exit remove target from touched list.
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("GroundShutter"))
@@ -67,19 +76,31 @@ public class TargetController : MonoBehaviour
 
     }
 
+
+    // Initialize the max health in the health bar.
     void StartHealthBarSetup()
     {
         healthSlider.maxValue = health;
 
         healthSlider.value = health;
-
+        
     }
 
+
+    // Update the health bar value for the hit target.
     public void UpdateSliderValue(float damage)
     {
         health -= damage;
 
         healthSlider.value = health;
+
+        if (healthSlider.value <= 0)
+        {
+            _gameManagerSC.activeTargetsList.Remove(gameObject);
+
+            Destroy(gameObject);
+
+        }
 
     }    
 

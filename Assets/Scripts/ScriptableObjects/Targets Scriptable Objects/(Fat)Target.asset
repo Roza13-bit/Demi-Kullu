@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb1876b2826943b4c9c01578508c867d, type: 3}
-  m_Name: (Generic)Target
+  m_Name: (Fat)Target
   m_EditorClassIdentifier: 
-  targetPrefab: {fileID: 3502322366085357546, guid: 4f28e13fe8b7af44e83beeddbe813def,
+  targetPrefab: {fileID: 3502322366085357546, guid: 0e50d334278a45340abdfe4398e8ff4a,
     type: 3}
-  targetHealth: 70
+  targetHealth: 100
