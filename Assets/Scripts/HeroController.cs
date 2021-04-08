@@ -121,12 +121,12 @@ public class HeroController : MonoBehaviour
     // The user can swipe to rotate the camera.
     private void Update()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && Input.touchCount < 3)
         {
             // EventSystem.current.IsPointerOverGameObject(touch.fingerId) &&
             // EventSystem.current.currentSelectedGameObject.GetComponent<CanvasRenderer>() != null
 
-            for (int x = 0; x < 1; x++)
+            for (int x = 0; x < Input.touchCount; x++)
             {
                 var touch = Input.touches[x];
 
@@ -488,13 +488,13 @@ public class HeroController : MonoBehaviour
     // touching the heavy attack aim dome.
     private void ShootHeavyAttack()
     {
-        StopCoroutine(shootingCoroutine);
-
-        _lightAttackActive = true;
-
         _gameManagerSC.TargetsListHeavyDamage();
 
         _heavyAttackAimDomeGO.localPosition = new Vector3(0f, 0f, 400f);
+
+        StopCoroutine(shootingCoroutine);
+
+        _lightAttackActive = true;
 
         StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
 

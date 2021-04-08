@@ -149,8 +149,6 @@ public class GameManager : MonoBehaviour
 
             for (int x = 0; x < targetSpawnTransformList.Count; x++)
             {
-                NavMeshPath path = new NavMeshPath();
-
                 _targetGenericPrefab = Instantiate(targetGenericSO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
 
                 activeTargetsList.Add(_targetGenericPrefab);
@@ -188,8 +186,6 @@ public class GameManager : MonoBehaviour
 
             for (int x = 0; x < targetSpawnTransformList.Count; x++)
             {
-                NavMeshPath path = new NavMeshPath();
-
                 _targetSkinnyPrefab = Instantiate(targetSkinnySO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
 
                 activeTargetsList.Add(_targetSkinnyPrefab);
@@ -227,8 +223,6 @@ public class GameManager : MonoBehaviour
 
             for (int x = 0; x < targetSpawnTransformList.Count; x++)
             {
-                NavMeshPath path = new NavMeshPath();
-
                 _targetFatPrefab = Instantiate(targetFatSO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
 
                 activeTargetsList.Add(_targetFatPrefab);
