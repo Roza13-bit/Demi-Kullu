@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -25,7 +26,11 @@ namespace UIClass
 
         [SerializeField] private TextMeshProUGUI strikeCounterTMP;
 
+        [SerializeField] private GameObject nextStagePanel;
+
         private static TextMeshProUGUI strikeCounterTMPStatic;
+
+        private static GameObject _nextStagePanelStatic;
 
         public GameObject aimCrosshair;
 
@@ -74,6 +79,10 @@ namespace UIClass
             strikeCounterTMPStatic = strikeCounterTMP;
 
             strikeCounterTMPStatic.text = "" + 0;
+
+            _nextStagePanelStatic = nextStagePanel;
+
+            _nextStagePanelStatic.SetActive(false);
 
         }
 
@@ -247,6 +256,19 @@ namespace UIClass
             _strikeCounter++;
 
             strikeCounterTMPStatic.text = "" + _strikeCounter;
+
+        }
+
+        //On click next stage button, load next scene.
+        public void OnClickNextStageButton()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
+        }
+
+        public static void ActivateNextStagePanel()
+        {
+            _nextStagePanelStatic.SetActive(true);
 
         }
 

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aaaa149b3035fdc499e65ab1f7d1681f, type: 3}
-  m_Name: Level1Stats
+  m_Name: LevelStats4
   m_EditorClassIdentifier: 
   levelSecondsTime: 90
-  loseConditionNumber: 42
-  genericTargetSpawnRate: 7.2
-  skinnyTargetSpawnRate: 16.6
-  fatTargetSpawnRate: 25.1
+  loseConditionNumber: 100
+  genericTargetSpawnRate: 13
+  skinnyTargetSpawnRate: 24
+  fatTargetSpawnRate: 49

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UIClass;
 using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour
@@ -132,6 +133,25 @@ public class GameManager : MonoBehaviour
 
         isSpawningTargets = false;
 
+        while (true)
+        {
+            Debug.Log("Still has active targets.");
+
+            if (activeTargetsList.Count == 0)
+            {
+                UIManager.ActivateNextStagePanel();
+
+                yield break;
+
+            }
+            else
+            {
+                yield return new WaitForSeconds(1f);
+
+            }
+
+        }
+
     }
 
     public void StartGameLoopTimerEvent()
@@ -147,23 +167,27 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnRate);
 
-            for (int x = 0; x < targetSpawnTransformList.Count; x++)
+            if (isSpawningTargets)
             {
-                _targetGenericPrefab = Instantiate(targetGenericSO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
+                for (int x = 0; x < targetSpawnTransformList.Count; x++)
+                {
+                    _targetGenericPrefab = Instantiate(targetGenericSO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
 
-                activeTargetsList.Add(_targetGenericPrefab);
+                    activeTargetsList.Add(_targetGenericPrefab);
 
-                yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(0.2f);
 
-                var _targetGenericPrefabNM = _targetGenericPrefab.GetComponent<NavMeshAgent>();
+                    var _targetGenericPrefabNM = _targetGenericPrefab.GetComponent<NavMeshAgent>();
 
-                _targetGenericPrefabNM.isStopped = false;
+                    _targetGenericPrefabNM.isStopped = false;
 
-                _targetGenericPrefabNM.SetDestination(activeGatesList[x].position);
+                    _targetGenericPrefabNM.SetDestination(activeGatesList[x].position);
 
-                //_targetGenericPrefabNM.CalculatePath(activeGatesList[1].position, path);
+                    //_targetGenericPrefabNM.CalculatePath(activeGatesList[1].position, path);
 
-                //_targetGenericPrefabNM.SetPath(path);
+                    //_targetGenericPrefabNM.SetPath(path);
+
+                }
 
             }
 
@@ -184,23 +208,27 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnRate);
 
-            for (int x = 0; x < targetSpawnTransformList.Count; x++)
+            if (isSpawningTargets)
             {
-                _targetSkinnyPrefab = Instantiate(targetSkinnySO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
+                for (int x = 0; x < targetSpawnTransformList.Count; x++)
+                {
+                    _targetSkinnyPrefab = Instantiate(targetSkinnySO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
 
-                activeTargetsList.Add(_targetSkinnyPrefab);
+                    activeTargetsList.Add(_targetSkinnyPrefab);
 
-                yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(0.2f);
 
-                var _targetSkinnyPrefabNM = _targetSkinnyPrefab.GetComponent<NavMeshAgent>();
+                    var _targetSkinnyPrefabNM = _targetSkinnyPrefab.GetComponent<NavMeshAgent>();
 
-                _targetSkinnyPrefabNM.isStopped = false;
+                    _targetSkinnyPrefabNM.isStopped = false;
 
-                _targetSkinnyPrefabNM.SetDestination(activeGatesList[x].position);
+                    _targetSkinnyPrefabNM.SetDestination(activeGatesList[x].position);
 
-                //_targetSkinnyPrefabNM.CalculatePath(activeGatesList[1].position, path);
+                    //_targetSkinnyPrefabNM.CalculatePath(activeGatesList[1].position, path);
 
-                //_targetSkinnyPrefabNM.SetPath(path);
+                    //_targetSkinnyPrefabNM.SetPath(path);
+
+                }
 
             }
 
@@ -221,23 +249,27 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnRate);
 
-            for (int x = 0; x < targetSpawnTransformList.Count; x++)
+            if (isSpawningTargets)
             {
-                _targetFatPrefab = Instantiate(targetFatSO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
+                for (int x = 0; x < targetSpawnTransformList.Count; x++)
+                {
+                    _targetFatPrefab = Instantiate(targetFatSO.targetPrefab, targetSpawnTransformList[x].position, targetSpawnTransformList[x].rotation, null);
 
-                activeTargetsList.Add(_targetFatPrefab);
+                    activeTargetsList.Add(_targetFatPrefab);
 
-                yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(0.2f);
 
-                var _targetFatPrefabNM = _targetFatPrefab.GetComponent<NavMeshAgent>();
+                    var _targetFatPrefabNM = _targetFatPrefab.GetComponent<NavMeshAgent>();
 
-                _targetFatPrefabNM.isStopped = false;
+                    _targetFatPrefabNM.isStopped = false;
 
-                _targetFatPrefabNM.SetDestination(activeGatesList[x].position);
+                    _targetFatPrefabNM.SetDestination(activeGatesList[x].position);
 
-                //_targetFatPrefabNM.CalculatePath(activeGatesList[1].position, path);
+                    //_targetFatPrefabNM.CalculatePath(activeGatesList[1].position, path);
 
-                //_targetFatPrefabNM.SetPath(path);
+                    //_targetFatPrefabNM.SetPath(path);
+
+                }
 
             }
 
