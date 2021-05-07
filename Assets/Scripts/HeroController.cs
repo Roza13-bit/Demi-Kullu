@@ -55,7 +55,9 @@ public class HeroController : MonoBehaviour
 
     // Attack state machine variables.
 
-    private Transform _lightAttackShootingGO;
+    public Transform _lightAttackShootingGO;
+
+    public Transform lightAttackShootingContainer;
 
     private List<GameObject> _lightAttackPoolList = new List<GameObject>();
 
@@ -88,8 +90,6 @@ public class HeroController : MonoBehaviour
     // Initializing the class.
     private void Start()
     {
-        _lightAttackShootingGO = transform.Find("LightAttackTransformGO");
-
         firstPersonCamera = FindObjectOfType<Camera>();
 
         _eventSystem = FindObjectOfType<EventSystem>();
@@ -168,20 +168,9 @@ public class HeroController : MonoBehaviour
 
                     Debug.Log("Touch count " + Input.touchCount);
 
-                    if (!_lightAttackActive)
-                    {
-                        ShootHeavyAttack();
+                    StartCoroutine(StopLightAttack());
 
-                        StartCoroutine(ZoomOutCameraCountdownTimer());
-
-                    }
-                    else if (_lightAttackActive)
-                    {
-                        StopLightAttack();
-
-                        StartCoroutine(ZoomOutCameraCountdownTimer());
-
-                    }
+                    StartCoroutine(ZoomOutCameraCountdownTimer());
 
                 }
 
@@ -237,9 +226,9 @@ public class HeroController : MonoBehaviour
 
         _lightAttackGO = _lightAttackSO.skillGO;
 
-        for (int x = 0; x < 15; x++)
+        for (int x = 0; x < 40; x++)
         {
-            var instance = Instantiate(_lightAttackGO, _lightAttackShootingGO.position, Quaternion.identity, _lightAttackShootingGO);
+            var instance = Instantiate(_lightAttackGO, _lightAttackShootingGO.position, Quaternion.identity, lightAttackShootingContainer);
 
             instance.transform.forward = _lightAttackShootingGO.transform.forward;
 
@@ -334,7 +323,7 @@ public class HeroController : MonoBehaviour
     }
 
 
-            // ~~ Light attack functions. ~~
+    // ~~ Light attack functions. ~~
 
     // Start shooting the light attack.
     public void PlayLightAttack()
@@ -345,9 +334,11 @@ public class HeroController : MonoBehaviour
 
 
     // Stop and reset the light attack.
-    public void StopLightAttack()
+    public IEnumerator StopLightAttack()
     {
         StopCoroutine(shootingCoroutine);
+
+        yield return new WaitForSeconds(0.3f);
 
         foreach (GameObject go in _lightAttackPoolList)
         {
@@ -370,21 +361,14 @@ public class HeroController : MonoBehaviour
     // This is the function that resets objects for the object pooling system.
     public void LightAttackResetSoloProjectile(GameObject projectile)
     {
-        for (int x = 0; x < _lightAttackPoolList.Count; x++)
-        {
-            if (_lightAttackPoolList[x] == projectile)
-            {
-                projectile.SetActive(false);
 
-                projectile.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        projectile.SetActive(false);
 
-                projectile.GetComponent<Rigidbody>().isKinematic = true;
+        projectile.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 
-                projectile.transform.localPosition = Vector3.zero;
+        projectile.GetComponent<Rigidbody>().isKinematic = true;
 
-            }
-
-        }
+        projectile.transform.localPosition = Vector3.zero;
 
     }
 
@@ -396,54 +380,27 @@ public class HeroController : MonoBehaviour
     {
         for (int x = 0; x < _lightAttackPoolList.Count; x++)
         {
-            if (_lightAttackActive)
+            if (!_lightAttackPoolList[x].activeSelf)
             {
-                if (!_lightAttackPoolList[x].activeSelf)
-                {
-                    var instance = _lightAttackPoolList[x];
+                var instance = _lightAttackPoolList[x];
 
-                    instance.SetActive(true);
+                instance.SetActive(true);
 
-                    instance.GetComponent<Rigidbody>().isKinematic = false;
+                instance.GetComponent<Rigidbody>().isKinematic = false;
 
-                    instance.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                instance.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-                    LightAttackAddProjectileForce(instance);
-
-                    x = 0;
-
-                }
-
-                yield return new WaitForSeconds(cooldown);
+                LightAttackAddProjectileForce(instance);
 
             }
-            else if (!_lightAttackActive)
+
+            if (x == _lightAttackPoolList.Count - 1)
             {
-                Ray ray = new Ray();
-
-                RaycastHit hit;
-
-                ray.origin = firstPersonCamera.transform.position;
-
-                ray.direction = firstPersonCamera.transform.forward;
-
-                Debug.DrawRay(ray.origin, ray.direction * 10, Color.blue, 1f);
-
-                if (Physics.Raycast(ray, out hit, 200f, ~ignoreMask))
-                {
-                    if (hit.collider.CompareTag("FightGround"))
-                    {
-                        _heavyAttackAimDomeGO.position = new Vector3(hit.point.x, -5f, hit.point.z);
-
-                    }
-
-                }
-                    
                 x = 0;
 
-                yield return new WaitForFixedUpdate();
-
             }
+
+            yield return new WaitForSeconds(cooldown);
 
         }
 
@@ -457,10 +414,12 @@ public class HeroController : MonoBehaviour
 
         go.GetComponent<Rigidbody>().velocity = _lightAttackShootingGO.forward * _lightAttackSO.skillSpeed;
 
+        go.transform.localRotation = _lightAttackShootingGO.localRotation;
+
     }
 
 
-            // ~~ Heavy attack functions. ~~
+    // ~~ Heavy attack functions. ~~
 
     // Invoke heavy attack event, press down heavy attack button.
     public void HeavyAttackShootingState()
@@ -473,47 +432,18 @@ public class HeroController : MonoBehaviour
 
     }
 
-
-    // Change the shooting state to heavy attack mode.
-    public void StartHeavyAttackAimAndShoot()
-    {
-        Debug.Log("Heavy event");
-
-        _lightAttackActive = false;
-
-    }
-
-
     // Do the actual damage to the targets that are
     // touching the heavy attack aim dome.
-    private void ShootHeavyAttack()
+    public void ShootHeavyAttack()
     {
         _gameManagerSC.TargetsListHeavyDamage();
 
-        _heavyAttackAimDomeGO.localPosition = new Vector3(0f, 0f, 400f);
-
-        StopCoroutine(shootingCoroutine);
-
-        _lightAttackActive = true;
-
         StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
-
-        foreach (GameObject go in _lightAttackPoolList)
-        {
-            go.SetActive(false);
-
-            go.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-
-            go.GetComponent<Rigidbody>().isKinematic = true;
-
-            go.transform.localPosition = Vector3.zero;
-
-        }
 
     }
 
 
-            // ~~ Ultimate attack functions. ~~
+    // ~~ Ultimate attack functions. ~~
 
     // Set ultimate attack button to pressed.
     // Invoke ultimate attack event.

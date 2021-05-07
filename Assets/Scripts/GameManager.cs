@@ -84,6 +84,8 @@ public class GameManager : MonoBehaviour
     {
         for (int x = 0; x < activeTargetsList.Count; x++)
         {
+            activeTargetsList[x].GetComponent<TargetController>().PlayUltimateAttackVFX();
+
             activeTargetsList[x].GetComponent<TargetController>().UpdateSliderValue(ultimateAttackSO.skillDamage);
 
             Debug.Log("Minus " + ultimateAttackSO.skillDamage + " Damage");

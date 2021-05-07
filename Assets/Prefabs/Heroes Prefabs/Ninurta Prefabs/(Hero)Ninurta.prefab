@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &297875467149489775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3800968322258420522}
+  m_Layer: 9
+  m_Name: lightAttackShootingContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3800968322258420522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 297875467149489775}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.19, y: -0.6500006, z: -1.1200047}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_Children:
+  - {fileID: 4362426865278510503}
+  m_Father: {fileID: 6027351672468133469}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4682393405580132850
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +184,7 @@ Transform:
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children:
   - {fileID: 9028923859358531847}
-  - {fileID: 4362426865278510503}
+  - {fileID: 3800968322258420522}
   - {fileID: 5852147539413996019}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -188,7 +219,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: -987219527383742924}
-        m_MethodName: StartHeavyAttackAimAndShoot
+        m_MethodName: ShootHeavyAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -212,7 +243,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  cameraAimSpeed: 1.5
+  cameraAimSpeed: 1.8
   direction: 1
   cameraZoomSpeed: 1.5
   upDownClampAngleMin: 10
@@ -223,8 +254,9 @@ MonoBehaviour:
   ignoreMask:
     serializedVersion: 2
     m_Bits: 1024
+  _lightAttackShootingGO: {fileID: 4362426865278510503}
+  lightAttackShootingContainer: {fileID: 3800968322258420522}
   _heavyAttackAimDomeGO: {fileID: 5852147539413996019}
-  smoothTime: 0
 --- !u!1 &6501026109971781861
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,12 +282,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6501026109971781861}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.19, y: -0.65, z: -1.12}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6027351672468133469}
-  m_RootOrder: 1
+  m_Father: {fileID: 3800968322258420522}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &970767162378587645
 MeshRenderer:

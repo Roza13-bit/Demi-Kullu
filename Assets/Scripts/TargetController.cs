@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 using UnityEngine.UI;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -8,6 +9,10 @@ using UIClass;
 
 public class TargetController : MonoBehaviour
 {
+    [Header("Ultimate Attack VFX")]
+
+    public VisualEffect _ultimateAttackVFX;
+
     [Header("Stats")]
 
     [SerializeField] private float health;
@@ -102,6 +107,26 @@ public class TargetController : MonoBehaviour
 
         }
 
-    }    
+    }
+
+    // Initiate ultimate attack effect.
+    public void PlayUltimateAttackVFX()
+    {
+        Debug.Log("IsActiveAndEnabled?");
+
+        if (_ultimateAttackVFX.isActiveAndEnabled)
+        {
+            Debug.Log("Before the play?");
+
+            _ultimateAttackVFX.Play();
+
+            Debug.Log("After the play?");
+
+        }
+        else
+        { Debug.Log("Not active and enabled"); }
+        
+
+    }
 
 }
