@@ -280,11 +280,11 @@ public class HeroController : MonoBehaviour
 
         while (true)
         {
-            firstPersonCamera.fieldOfView = Mathf.Lerp(firstPersonCamera.fieldOfView, 50f, timeSinceStartedZoomOut * cameraZoomSpeed);
+            firstPersonCamera.fieldOfView = Mathf.Lerp(firstPersonCamera.fieldOfView, 40f, timeSinceStartedZoomOut * cameraZoomSpeed);
 
             timeSinceStartedZoomOut += Time.deltaTime;
 
-            if (firstPersonCamera.fieldOfView == 50f)
+            if (firstPersonCamera.fieldOfView == 40f)
             {
                 yield break;
 
@@ -306,11 +306,11 @@ public class HeroController : MonoBehaviour
 
         while (true)
         {
-            firstPersonCamera.fieldOfView = Mathf.Lerp(firstPersonCamera.fieldOfView, 35f, timeSinceStartedZoomIn * cameraZoomSpeed);
+            firstPersonCamera.fieldOfView = Mathf.Lerp(firstPersonCamera.fieldOfView, 22f, timeSinceStartedZoomIn * cameraZoomSpeed);
 
             timeSinceStartedZoomIn += Time.deltaTime;
 
-            if (firstPersonCamera.fieldOfView == 35f)
+            if (firstPersonCamera.fieldOfView == 22f)
             {
                 yield break;
 
@@ -428,7 +428,9 @@ public class HeroController : MonoBehaviour
 
         _uiManagerSC.SetHeavyAttackPressed();
 
-        HeavyAttackEvent.Invoke();
+        // StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
+
+        // HeavyAttackEvent.Invoke();
 
     }
 
@@ -437,8 +439,6 @@ public class HeroController : MonoBehaviour
     public void ShootHeavyAttack()
     {
         _gameManagerSC.TargetsListHeavyDamage();
-
-        StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
 
     }
 

@@ -11,7 +11,9 @@ public class TargetController : MonoBehaviour
 {
     [Header("Ultimate Attack VFX")]
 
-    public VisualEffect _ultimateAttackVFX;
+    public VisualEffect ultimateAttackVFX;
+
+    public VisualEffect impactAttackVFX;
 
     [Header("Stats")]
 
@@ -42,6 +44,18 @@ public class TargetController : MonoBehaviour
             Debug.Log("Collision Occurd");
 
             var damage = _gameManagerSC.lightAttackSO.skillDamage;
+
+            if (impactAttackVFX.isActiveAndEnabled)
+            {
+                //Debug.Log("Before the play?");
+
+                impactAttackVFX.Play();
+
+                // Debug.Log("After the play?");
+
+            }
+            else
+            { Debug.Log("Not active and enabled"); }
 
             UpdateSliderValue(damage);
 
@@ -112,15 +126,15 @@ public class TargetController : MonoBehaviour
     // Initiate ultimate attack effect.
     public void PlayUltimateAttackVFX()
     {
-        Debug.Log("IsActiveAndEnabled?");
+        //Debug.Log("IsActiveAndEnabled?");
 
-        if (_ultimateAttackVFX.isActiveAndEnabled)
+        if (ultimateAttackVFX.isActiveAndEnabled)
         {
-            Debug.Log("Before the play?");
+           //Debug.Log("Before the play?");
 
-            _ultimateAttackVFX.Play();
+            ultimateAttackVFX.Play();
 
-            Debug.Log("After the play?");
+           // Debug.Log("After the play?");
 
         }
         else

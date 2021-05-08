@@ -159,6 +159,8 @@ namespace UIClass
         {
             heavyAttackButton.image.sprite = _heavyAttackSpritePressed;
 
+            StartCoroutine(SetHeavyAttackCooldown());
+
         }
 
 

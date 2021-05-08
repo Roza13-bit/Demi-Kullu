@@ -17,6 +17,6 @@ MonoBehaviour:
   lightAttackSO: {fileID: 11400000, guid: 03c509de333444b43bab660d38e4d9ae, type: 2}
   heavyAttackSO: {fileID: 11400000, guid: bcf1f3d791951fd4793d9176deece412, type: 2}
   ultimateAttackSO: {fileID: 11400000, guid: bd204935da4b3b6448ca22a5f2c6c1eb, type: 2}
-  heroStartPos: {x: 0, y: 5.1, z: 19.8}
+  heroStartPos: {x: 0, y: 20.25, z: 21.3}
   heroStartEuler: {x: 0, y: 180, z: 0}
   heroStartSize: 0.2
