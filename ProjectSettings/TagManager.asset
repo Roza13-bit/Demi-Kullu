@@ -12,8 +12,11 @@ TagManager:
   - UI
   - LightAttackParticle
   - FightGround
-  - GroundShutter
   - HeavyAttackParticle
+  - 0
+  - 1
+  - 2
+  - HeavyAttackAOE
   layers:
   - Default
   - TransparentFX

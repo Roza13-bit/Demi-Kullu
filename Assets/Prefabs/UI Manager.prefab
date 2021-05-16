@@ -49,6 +49,8 @@ MonoBehaviour:
   startPlayTimerTMP: {fileID: 0}
   heavyCDTimerTMP: {fileID: 0}
   ultimateCDTimerTMP: {fileID: 0}
+  strikeCounterTMP: {fileID: 0}
+  nextStagePanel: {fileID: 0}
   aimCrosshair: {fileID: 0}
   lightAttackSO: {fileID: 0}
   lightAttackButton: {fileID: 0}

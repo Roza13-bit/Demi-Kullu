@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private StateManager stateManagerSC;
 
+    [SerializeField] private UIManager uiManagerCS;
+
     // Hero prefab.
     public GameObject heroPrefab;
 
@@ -48,6 +50,8 @@ public class GameManager : MonoBehaviour
 
     private bool isSpawningTargets;
 
+    public bool heavyAttackTimeOver;
+
 
     // Enable the hero controller when the play starts.
     public void EnableHeroControllerScript()
@@ -59,20 +63,35 @@ public class GameManager : MonoBehaviour
     }
 
 
-            // ~~ Deal damage to targets ~~
+    // ~~ Deal damage to targets ~~
 
     // Deal heavy damage to touched enemies.
-    public void TargetsListHeavyDamage()
+    public IEnumerator TargetsListHeavyDamage()
     {
-        for (int x = 0; x < touchedTargetsList.Count; x++)
+        heavyAttackTimeOver = false;
+
+        while (true)
         {
-            if (touchedTargetsList[x] != null)
+            for (int x = 0; x < touchedTargetsList.Count; x++)
             {
-                touchedTargetsList[x].GetComponent<TargetController>().UpdateSliderValue(heavyAttackSO.skillDamage);
+                if (touchedTargetsList[x] != null)
+                {
+                    touchedTargetsList[x].GetComponent<TargetController>().HeavyAttackVFX();
+
+                    touchedTargetsList[x].GetComponent<TargetController>().UpdateSliderValue(heavyAttackSO.skillDamage);
+
+                    //Debug.Log("Minus " + heavyAttackSO.skillDamage + " Damage");
+
+                }
 
             }
 
-            Debug.Log("Minus " + heavyAttackSO.skillDamage + " Damage");
+            yield return new WaitForSeconds(heavyAttackSO.skillSpeed);
+
+            if (heavyAttackTimeOver)
+            {
+                yield break;
+            }
 
         }
 
@@ -88,14 +107,14 @@ public class GameManager : MonoBehaviour
 
             activeTargetsList[x].GetComponent<TargetController>().UpdateSliderValue(ultimateAttackSO.skillDamage);
 
-            Debug.Log("Minus " + ultimateAttackSO.skillDamage + " Damage");
+            //Debug.Log("Minus " + ultimateAttackSO.skillDamage + " Damage");
 
         }
 
     }
 
 
-            // ~~ Targets spawning & movement logic ~~
+    // ~~ Targets spawning & movement logic ~~
 
     // Initialize movement for the starting enemies.
     public void StartTargetsMovement()
@@ -137,7 +156,7 @@ public class GameManager : MonoBehaviour
 
         while (true)
         {
-            Debug.Log("Still has active targets.");
+            //Debug.Log("Still has active targets.");
 
             if (activeTargetsList.Count == 0)
             {

@@ -26,6 +26,14 @@ public class GameSetupSingleton : MonoBehaviour
 
     [SerializeField] private UIManager uiManagerSC;
 
+    [Header("Start Positions")]
+
+    [SerializeField] private Vector3 heroTranform0;
+
+    [SerializeField] private Vector3 heroTranform1;
+
+    [SerializeField] private Vector3 heroTranform2;
+
     // Private Variables.
 
     private GameObject _heroPrefab;
@@ -59,11 +67,32 @@ public class GameSetupSingleton : MonoBehaviour
 
         gameManagerSC.targetFatSO = targetFatSO;
 
-        _heroPrefab = Instantiate(heroPrefabSO.heroPrefab);
+        //Debug.Log("cameraPick = " + CameraPicker.cameraPick);
+
+        switch (CameraPicker.cameraPick)
+        {
+            case 0:
+
+                _heroPrefab = Instantiate(heroPrefabSO.heroPrefab, heroTranform0, Quaternion.Euler(0, -180, 0));
+
+                break;
+            case 1:
+
+                _heroPrefab = Instantiate(heroPrefabSO.heroPrefab, heroTranform1, Quaternion.Euler(0, -180, 0));
+
+                break;
+            case 2:
+
+                _heroPrefab = Instantiate(heroPrefabSO.heroPrefab, heroTranform2, Quaternion.Euler(0, -180, 0));
+
+                break;
+        }
 
         gameManagerSC.heroPrefab = _heroPrefab;
 
         _mazePrefab = Instantiate(mazePrefab);
+
+        Vibration.Init();
 
         foreach (Transform child in _mazePrefab.transform)
         {

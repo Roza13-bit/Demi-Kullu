@@ -20,4 +20,6 @@ public class SkillScriptableObject : ScriptableObject
 
     public float skillMass;
 
+    public float skillDuration;
+
 }

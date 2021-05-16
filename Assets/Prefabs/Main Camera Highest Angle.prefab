@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 1593514785894828599}
   - component: {fileID: 1593514785894828602}
   m_Layer: 0
-  m_Name: Main Camera
-  m_TagString: Untagged
+  m_Name: Main Camera Highest Angle
+  m_TagString: 2
   m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,16 +27,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1593514785894828600}
-  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 0, y: 0, z: 5.1}
+  m_LocalRotation: {x: 0.46174863, y: 0, z: 0, w: 0.8870109}
+  m_LocalPosition: {x: 0, y: 0, z: 9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 55, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 19.2}
+  m_AnchoredPosition: {x: 0, y: 33}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!20 &1593514785894828597
@@ -64,7 +64,7 @@ Camera:
     height: 1
   near clip plane: 0.4
   far clip plane: 1800
-  field of view: 50.53402
+  field of view: 39.43049
   orthographic: 0
   orthographic size: 30
   m_Depth: -1
@@ -133,7 +133,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5032bf75cfade5e46891e053003b0b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraFirstPersonStartY: 11.1
+  cameraFirstPersonStartY: 15.1
   cameraFirstPersonStartZ: 23.6
   lerpPosSpeed: 0.2
   waitBeforeLerpingCamera: 3
+  stateManagerCS: {fileID: 0}
+  cameraAimSpeed: 2.2
+  direction: 1
+  cameraZoomSpeed: 2.6
+  upDownClampAngleMin: -150
+  upDownClampAngleMax: 150
+  leftRightClampAngle: 100
+  ignoreMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  strengthFactor: 0.000065

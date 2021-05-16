@@ -5,9 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/Level1.unity
+  - enabled: 0
+    path: Assets/Scenes/PrototypeLevel.unity
     guid: 49481b6f2f4cea442a38350853c3a816
+  - enabled: 0
+    path: Assets/Plug-Ins/Vibration/Example/VibrationExample.unity
+    guid: 97713010e65794861b2e4b75c95a2ece
+  - enabled: 1
+    path: Assets/Scenes/A. StartScreen.unity
+    guid: dfecc9078b810474aa1dca57ec428505
   - enabled: 1
     path: Assets/Scenes/Level2.unity
     guid: d4dbbddf0fe361345bc519d34a4cb747

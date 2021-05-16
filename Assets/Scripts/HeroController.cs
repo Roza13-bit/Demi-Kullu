@@ -19,18 +19,6 @@ public class HeroController : MonoBehaviour
 
     [Header("Camera Swiping Settings")]
 
-    public float cameraAimSpeed = 0.5f;
-
-    [SerializeField] private float direction = -1;
-
-    [SerializeField] private float cameraZoomSpeed;
-
-    [SerializeField] private int upDownClampAngleMin;
-
-    [SerializeField] private int upDownClampAngleMax;
-
-    [SerializeField] private int leftRightClampAngle;
-
     [SerializeField] private float leftProjectileOffset;
 
     [SerializeField] private float upProjectileOffset;
@@ -51,9 +39,13 @@ public class HeroController : MonoBehaviour
 
     private UIManager _uiManagerSC;
 
+    private Button heavyAttackButton;
+
     private GameManager _gameManagerSC;
 
     // Attack state machine variables.
+
+    private GameObject localheavyAttackAOEGameObject;
 
     public Transform _lightAttackShootingGO;
 
@@ -61,36 +53,23 @@ public class HeroController : MonoBehaviour
 
     private List<GameObject> _lightAttackPoolList = new List<GameObject>();
 
-    static bool _lightAttackActive;
+    private bool _lightAttackActive;
 
-    [SerializeField] private Transform _heavyAttackAimDomeGO;
+    private bool _heavyAttackActive;
 
     private IEnumerator shootingCoroutine;
 
-    private IEnumerator zoomInCoroutine;
-
-    private IEnumerator zoomOutCoroutine;
-
-    // Camera swiping variables.
-
     private Camera firstPersonCamera;
-
-    private float rotX = 0f;
-
-    private float rotY = 0f;
-
-    private Vector3 originalRot;
-
-    private GameObject aimCrosshair;
 
     private EventSystem _eventSystem;
 
-    private bool zoomCameraBool;
 
     // Initializing the class.
     private void Start()
     {
         firstPersonCamera = FindObjectOfType<Camera>();
+
+        Debug.Log(firstPersonCamera.name);
 
         _eventSystem = FindObjectOfType<EventSystem>();
 
@@ -100,19 +79,9 @@ public class HeroController : MonoBehaviour
 
         SetupAttacks();
 
-        originalRot = firstPersonCamera.transform.eulerAngles;
-
-        rotY = originalRot.y;
-
-        rotX = originalRot.x;
-
-        Debug.Log("rotX : " + rotX);
-
-        Debug.Log("rotY : " + rotY);
-
-        aimCrosshair = _uiManagerSC.aimCrosshair;
-
         _lightAttackActive = true;
+
+        _heavyAttackActive = false;
 
     }
 
@@ -132,45 +101,69 @@ public class HeroController : MonoBehaviour
 
                 if (touch.phase == TouchPhase.Began && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
                 {
-                    Debug.Log("Touch start " + touch.fingerId);
+                    //Debug.Log("Touch start " + touch.fingerId);
 
-                    StartCoroutine(ZoomInCameraWhileShooting());
+                    if (_lightAttackActive && !_heavyAttackActive)
+                    {
+                        PlayLightAttack();
 
-                    aimCrosshair.SetActive(true);
+                    }
+                    else if (!_lightAttackActive && _heavyAttackActive)
+                    {
+                        localheavyAttackAOEGameObject.SetActive(true);
 
-                    PlayLightAttack();
+                    }
 
                 }
                 else if (touch.phase == TouchPhase.Moved && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
                 {
-                    rotX -= touch.deltaPosition.y * Time.deltaTime * cameraAimSpeed * direction;
+                    if (_lightAttackActive && !_heavyAttackActive)
+                    {
+                        _lightAttackShootingGO.transform.eulerAngles =
+                                           new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset,
+                                                       firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
 
-                    rotY += touch.deltaPosition.x * Time.deltaTime * cameraAimSpeed * direction;
+                    }
+                    else if (!_lightAttackActive && _heavyAttackActive)
+                    {
+                        StopLightAttack();
 
-                    // Debug.Log(" rotX : " + rotX + " rotY : " + rotY);
+                        firstPersonCamera.GetComponent<CameraTouchController>().cameraAimSpeed = 1.5f;
 
-                    rotY = Mathf.Clamp(rotY, -leftRightClampAngle, leftRightClampAngle);
+                        _lightAttackShootingGO.transform.eulerAngles =
+                                           new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset,
+                                                       firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
 
-                    rotX = Mathf.Clamp(rotX, upDownClampAngleMin, upDownClampAngleMax);
+                        if (localheavyAttackAOEGameObject.activeSelf)
+                        {
+                            RaycastHeavyAttackDome(localheavyAttackAOEGameObject);
 
-                    // Debug.Log(" firstPersonCamera.transform.eulerAngles (Before) : " + firstPersonCamera.transform.eulerAngles);
+                        }
+                        else if (!localheavyAttackAOEGameObject.activeSelf)
+                        {
+                            localheavyAttackAOEGameObject.SetActive(true);
 
-                    firstPersonCamera.transform.eulerAngles = new Vector3(rotX, rotY, 0f);
+                        }
 
-                    // Debug.Log(" firstPersonCamera.transform.eulerAngles (After) : " + firstPersonCamera.transform.eulerAngles);
-
-                    _lightAttackShootingGO.transform.eulerAngles = new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset, firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
+                    }
 
                 }
                 else if (touch.phase == TouchPhase.Ended && !IsTouchOnUIElement(touch.position))
                 {
-                    Debug.Log("Touch ended " + touch.fingerId);
+                    //Debug.Log("Touch ended " + touch.fingerId);
 
-                    Debug.Log("Touch count " + Input.touchCount);
+                    //Debug.Log("Touch count " + Input.touchCount);
 
-                    StartCoroutine(StopLightAttack());
+                    if (_lightAttackActive && !_heavyAttackActive)
+                    {
+                        StopLightAttack();
 
-                    StartCoroutine(ZoomOutCameraCountdownTimer());
+                    }
+                    else if (!_lightAttackActive && _heavyAttackActive)
+                    {
+                        ShootHeavyAttack();
+
+                    }
 
                 }
 
@@ -216,7 +209,11 @@ public class HeroController : MonoBehaviour
     {
         _uiManagerSC = FindObjectOfType<UIManager>();
 
-        Debug.Log("ui manager type : " + _uiManagerSC.name);
+        heavyAttackButton = _uiManagerSC.heavyAttackButton;
+
+        heavyAttackButton.onClick.AddListener(HeavyAttackShootingState);
+
+        //Debug.Log("ui manager type : " + _uiManagerSC.name);
 
         _lightAttackSO = _uiManagerSC.lightAttackSO;
 
@@ -244,81 +241,9 @@ public class HeroController : MonoBehaviour
 
         shootingCoroutine = LightAttackShootingCoroutine(_lightAttackSO.skillCooldown);
 
-    }
+        localheavyAttackAOEGameObject = Instantiate(_heavyAttackSO.skillGO);
 
-
-    // Countdown coroutine that get's cancelled if the user clicks the screen.
-    // If the user hasn't clicked for 4 seconds, zoom out camera.
-    private IEnumerator ZoomOutCameraCountdownTimer()
-    {
-        zoomCameraBool = true;
-
-        for (int x = 0; x < 4; x++)
-        {
-            Debug.Log(x);
-
-            yield return new WaitForSeconds(1);
-
-            if (!zoomCameraBool)
-            {
-                yield break;
-
-            }
-
-        }
-
-        StartCoroutine(ZoomOutCameraWhileNotShooting());
-
-    }
-
-
-    // Zoom out the camera field of view, while the player is not aiming. 
-    // Starts after a small wait time.
-    private IEnumerator ZoomOutCameraWhileNotShooting()
-    {
-        var timeSinceStartedZoomOut = 0.0f;
-
-        while (true)
-        {
-            firstPersonCamera.fieldOfView = Mathf.Lerp(firstPersonCamera.fieldOfView, 40f, timeSinceStartedZoomOut * cameraZoomSpeed);
-
-            timeSinceStartedZoomOut += Time.deltaTime;
-
-            if (firstPersonCamera.fieldOfView == 40f)
-            {
-                yield break;
-
-            }
-
-            yield return null;
-
-        }
-
-    }
-
-
-    // Zoom in the camera field of view, while the player is shooting.
-    private IEnumerator ZoomInCameraWhileShooting()
-    {
-        zoomCameraBool = false;
-
-        var timeSinceStartedZoomIn = 0.0f;
-
-        while (true)
-        {
-            firstPersonCamera.fieldOfView = Mathf.Lerp(firstPersonCamera.fieldOfView, 22f, timeSinceStartedZoomIn * cameraZoomSpeed);
-
-            timeSinceStartedZoomIn += Time.deltaTime;
-
-            if (firstPersonCamera.fieldOfView == 22f)
-            {
-                yield break;
-
-            }
-
-            yield return null;
-
-        }
+        localheavyAttackAOEGameObject.SetActive(false);
 
     }
 
@@ -334,11 +259,9 @@ public class HeroController : MonoBehaviour
 
 
     // Stop and reset the light attack.
-    public IEnumerator StopLightAttack()
+    public void StopLightAttack()
     {
         StopCoroutine(shootingCoroutine);
-
-        yield return new WaitForSeconds(0.3f);
 
         foreach (GameObject go in _lightAttackPoolList)
         {
@@ -352,8 +275,6 @@ public class HeroController : MonoBehaviour
 
         }
 
-        aimCrosshair.SetActive(false);
-
     }
 
 
@@ -361,7 +282,6 @@ public class HeroController : MonoBehaviour
     // This is the function that resets objects for the object pooling system.
     public void LightAttackResetSoloProjectile(GameObject projectile)
     {
-
         projectile.SetActive(false);
 
         projectile.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
@@ -424,13 +344,12 @@ public class HeroController : MonoBehaviour
     // Invoke heavy attack event, press down heavy attack button.
     public void HeavyAttackShootingState()
     {
+        _heavyAttackActive = true;
+        _lightAttackActive = false;
+
         _uiManagerSC = FindObjectOfType<UIManager>();
 
         _uiManagerSC.SetHeavyAttackPressed();
-
-        // StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
-
-        // HeavyAttackEvent.Invoke();
 
     }
 
@@ -438,7 +357,53 @@ public class HeroController : MonoBehaviour
     // touching the heavy attack aim dome.
     public void ShootHeavyAttack()
     {
-        _gameManagerSC.TargetsListHeavyDamage();
+        StartCoroutine(_gameManagerSC.TargetsListHeavyDamage());
+
+        StartCoroutine(HeavyAttackTimerCoroutine());
+
+        firstPersonCamera.GetComponent<CameraTouchController>().cameraAimSpeed = 2.2f;
+
+        _heavyAttackActive = false;
+        _lightAttackActive = true;
+
+    }
+
+    private void RaycastHeavyAttackDome(GameObject electricSphere)
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(firstPersonCamera.transform.position, firstPersonCamera.transform.forward, out hit))
+        {
+            //Debug.Log("Raycast Hit : " + hit.collider.name);
+
+            //Debug.Log("Raycast Hit Point : " + hit.point);
+
+            //Debug.Log("localheavyAttackAOE : " + electricSphere.name);
+
+            electricSphere.transform.position = new Vector3(hit.point.x, -4.5f, hit.point.z);
+
+        }
+
+    }
+
+
+    private IEnumerator HeavyAttackTimerCoroutine()
+    {
+        for (int i = 0; i < _heavyAttackSO.skillDuration; i++)
+        {
+            yield return new WaitForSeconds(1);
+
+            i++;
+
+        }
+
+        _gameManagerSC.heavyAttackTimeOver = true;
+
+        localheavyAttackAOEGameObject.SetActive(false);
+
+        StartCoroutine(_uiManagerSC.SetHeavyAttackCooldown());
+
+        yield break;
 
     }
 

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63630bd24c9134942954c2d1dfc4861f, type: 3}
   m_Name: Ninurta - HeavyAttack 2
   m_EditorClassIdentifier: 
-  skillGO: {fileID: 0}
+  skillGO: {fileID: 4742879043911426128, guid: 9e9aa7842107ba643bd3e3f05f7b9344, type: 3}
   skillSpriteMain: {fileID: 21300000, guid: 0d3392557e13f764992ce18a62dc588e, type: 3}
   skillSpritePressed: {fileID: 21300000, guid: ab8b352d055a55444934de54bf51646a, type: 3}
-  skillControllerType: {fileID: 0}
-  skillDamage: 25
-  skillCooldown: 6
-  skillSpeed: 0
+  skillDamage: 11
+  skillCooldown: 4
+  skillSpeed: 0.8
   skillMass: 0
+  skillDuration: 8

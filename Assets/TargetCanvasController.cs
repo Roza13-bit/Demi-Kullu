@@ -6,7 +6,7 @@ public class TargetCanvasController : MonoBehaviour
 {
     private void FixedUpdate()
     {
-        transform.localRotation = Quaternion.LookRotation(FindObjectOfType<Camera>().transform.position);
+        transform.rotation = Quaternion.LookRotation(new Vector3(0f, 11f, -23f));
 
     }
 

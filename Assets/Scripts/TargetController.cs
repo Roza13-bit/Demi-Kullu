@@ -15,6 +15,8 @@ public class TargetController : MonoBehaviour
 
     public VisualEffect impactAttackVFX;
 
+    public VisualEffect electricImpactAttackVFX;
+
     [Header("Stats")]
 
     [SerializeField] private float health;
@@ -41,7 +43,9 @@ public class TargetController : MonoBehaviour
     {
         if (other.CompareTag("PowerShank"))
         {
-            Debug.Log("Collision Occurd");
+           // Debug.Log("Collision Occurd");
+
+            Vibration.Vibrate(40);
 
             var damage = _gameManagerSC.lightAttackSO.skillDamage;
 
@@ -59,10 +63,10 @@ public class TargetController : MonoBehaviour
 
             UpdateSliderValue(damage);
 
-            Debug.Log("Minus " + damage + " Damage");
+           // Debug.Log("Minus " + damage + " Damage");
 
         }
-        else if (other.CompareTag("GroundShutter"))
+        else if (other.CompareTag("HeavyAttackAOE"))
         {
             _gameManagerSC.touchedTargetsList.Add(this.gameObject);
 
@@ -85,7 +89,7 @@ public class TargetController : MonoBehaviour
     // On trigger exit remove target from touched list.
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("GroundShutter"))
+        if (other.CompareTag("HeavyAttackAOE"))
         {
             _gameManagerSC.touchedTargetsList.Remove(this.gameObject);
 
@@ -134,12 +138,20 @@ public class TargetController : MonoBehaviour
 
             ultimateAttackVFX.Play();
 
-           // Debug.Log("After the play?");
+            Vibration.Vibrate(40);
+
+            // Debug.Log("After the play?");
 
         }
         else
         { Debug.Log("Not active and enabled"); }
         
+
+    }
+
+    public void HeavyAttackVFX()
+    {
+        electricImpactAttackVFX.Play();
 
     }
 

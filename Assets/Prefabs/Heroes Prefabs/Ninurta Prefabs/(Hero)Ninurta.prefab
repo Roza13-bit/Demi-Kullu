@@ -56,7 +56,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6408240489960672487}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 10.71, z: 23.1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children:
   - {fileID: 9028923859358531847}
@@ -92,18 +92,7 @@ MonoBehaviour:
         m_CallState: 2
   HeavyAttackEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: -987219527383742924}
-        m_MethodName: ShootHeavyAttack
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   UltimateAttackEvent:
     m_PersistentCalls:
       m_Calls:
@@ -118,20 +107,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  cameraAimSpeed: 1.5
-  direction: 1
-  cameraZoomSpeed: 1.5
-  upDownClampAngleMin: -20
-  upDownClampAngleMax: 88
-  leftRightClampAngle: 60
   leftProjectileOffset: 2.5
   upProjectileOffset: -3.3
   ignoreMask:
     serializedVersion: 2
     m_Bits: 1024
+  heavyAttackAOEGameObject: {fileID: 4742879043911426128, guid: 9e9aa7842107ba643bd3e3f05f7b9344,
+    type: 3}
   _lightAttackShootingGO: {fileID: 4362426865278510503}
   lightAttackShootingContainer: {fileID: 3800968322258420522}
-  _heavyAttackAimDomeGO: {fileID: 0}
 --- !u!1 &6501026109971781861
 GameObject:
   m_ObjectHideFlags: 0

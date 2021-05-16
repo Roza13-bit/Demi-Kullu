@@ -159,7 +159,7 @@ namespace UIClass
         {
             heavyAttackButton.image.sprite = _heavyAttackSpritePressed;
 
-            StartCoroutine(SetHeavyAttackCooldown());
+            // StartCoroutine(SetHeavyAttackCooldown());
 
         }
 
@@ -201,7 +201,7 @@ namespace UIClass
         // Sets the ultimate attack button to pressed sprite.
         public void SetUltimateAttackPressed()
         {
-            Debug.Log("Started ultimate press.");
+            //Debug.Log("Started ultimate press.");
 
             ultimateAttackButton.image.sprite = _ultimateAttackSpritePressed;
 
@@ -211,7 +211,7 @@ namespace UIClass
         // Sets the ultimate attack button to unpressed sprite.
         public void SetUltimateAttackUnpressed()
         {
-            Debug.Log("Started ultimate unpress.");
+            //Debug.Log("Started ultimate unpress.");
 
             ultimateAttackButton.image.sprite = _ultimateAttackSpriteMain;
 
@@ -229,7 +229,7 @@ namespace UIClass
 
         private IEnumerator SetUltimateAttackCooldown()
         {
-            Debug.Log("Started ultimate cd.");
+            //Debug.Log("Started ultimate cd.");
 
             ultimateAttackButton.interactable = false;
 
