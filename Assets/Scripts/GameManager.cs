@@ -125,7 +125,15 @@ public class GameManager : MonoBehaviour
             {
                 activeTargetsList[x].GetComponent<NavMeshAgent>().isStopped = false;
 
-                activeTargetsList[x].GetComponent<NavMeshAgent>().SetDestination(activeGatesList[x].position);
+                if (activeGatesList.Count == 1)
+                {
+                    activeTargetsList[x].GetComponent<NavMeshAgent>().SetDestination(activeGatesList[0].position);
+
+                }
+                else
+                {
+                    activeTargetsList[x].GetComponent<NavMeshAgent>().SetDestination(activeGatesList[x].position);
+                }
 
             }
             else
@@ -202,7 +210,17 @@ public class GameManager : MonoBehaviour
 
                     _targetGenericPrefabNM.isStopped = false;
 
-                    _targetGenericPrefabNM.SetDestination(activeGatesList[x].position);
+                    // _targetGenericPrefabNM.SetDestination(activeGatesList[x].position);
+
+                    if (activeGatesList.Count == 1)
+                    {
+                        _targetGenericPrefabNM.SetDestination(activeGatesList[0].position);
+
+                    }
+                    else
+                    {
+                        _targetGenericPrefabNM.SetDestination(activeGatesList[x].position);
+                    }
 
                     //_targetGenericPrefabNM.CalculatePath(activeGatesList[1].position, path);
 
@@ -243,7 +261,17 @@ public class GameManager : MonoBehaviour
 
                     _targetSkinnyPrefabNM.isStopped = false;
 
-                    _targetSkinnyPrefabNM.SetDestination(activeGatesList[x].position);
+                    //_targetSkinnyPrefabNM.SetDestination(activeGatesList[x].position);
+
+                    if (activeGatesList.Count == 1)
+                    {
+                        _targetSkinnyPrefabNM.SetDestination(activeGatesList[0].position);
+
+                    }
+                    else
+                    {
+                        _targetSkinnyPrefabNM.SetDestination(activeGatesList[x].position);
+                    }
 
                     //_targetSkinnyPrefabNM.CalculatePath(activeGatesList[1].position, path);
 
@@ -284,7 +312,17 @@ public class GameManager : MonoBehaviour
 
                     _targetFatPrefabNM.isStopped = false;
 
-                    _targetFatPrefabNM.SetDestination(activeGatesList[x].position);
+                    //_targetFatPrefabNM.SetDestination(activeGatesList[x].position);
+
+                    if (activeGatesList.Count == 1)
+                    {
+                        _targetFatPrefabNM.SetDestination(activeGatesList[0].position);
+
+                    }
+                    else
+                    {
+                        _targetFatPrefabNM.SetDestination(activeGatesList[x].position);
+                    }
 
                     //_targetFatPrefabNM.CalculatePath(activeGatesList[1].position, path);
 

@@ -93,7 +93,7 @@ public class CameraTouchController : MonoBehaviour
             {
                 var touch = Input.touches[x];
 
-                if (touch.phase == TouchPhase.Began && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
+                if (touch.phase == TouchPhase.Began && !IsTouchOnUIElement(touch.position))
                 {
                     Debug.Log("Touch start " + touch.fingerId);
 
@@ -104,15 +104,15 @@ public class CameraTouchController : MonoBehaviour
                     // PlayLightAttack();
 
                 }
-                else if (touch.phase == TouchPhase.Moved && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
+                else if (touch.phase == TouchPhase.Moved && !IsTouchOnUIElement(touch.position))
                 {
                     var moveSpeed = touch.deltaPosition.magnitude / Time.deltaTime;
 
-                    Debug.Log("Move Speed Camera Before Tweaking : " + moveSpeed);
+                   // Debug.Log("Move Speed Camera Before Tweaking : " + moveSpeed);
 
                     var factor = strengthFactor * moveSpeed;
 
-                    Debug.Log("Move Speed Camera After Tweaking : " + factor);
+                   // Debug.Log("Move Speed Camera After Tweaking : " + factor);
 
                     rotX -= touch.deltaPosition.y * Time.deltaTime * (cameraAimSpeed + factor) * direction;
 

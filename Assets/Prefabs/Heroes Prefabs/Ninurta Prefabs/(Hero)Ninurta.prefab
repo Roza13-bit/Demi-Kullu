@@ -112,10 +112,9 @@ MonoBehaviour:
   ignoreMask:
     serializedVersion: 2
     m_Bits: 1024
-  heavyAttackAOEGameObject: {fileID: 4742879043911426128, guid: 9e9aa7842107ba643bd3e3f05f7b9344,
-    type: 3}
   _lightAttackShootingGO: {fileID: 4362426865278510503}
   lightAttackShootingContainer: {fileID: 3800968322258420522}
+  sliderSpeed: 6
 --- !u!1 &6501026109971781861
 GameObject:
   m_ObjectHideFlags: 0

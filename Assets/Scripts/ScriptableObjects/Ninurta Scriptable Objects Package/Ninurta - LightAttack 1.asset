@@ -15,7 +15,8 @@ MonoBehaviour:
   skillGO: {fileID: 2555266102843036407, guid: 62e644439f39b6543a23a9e5cd177c23, type: 3}
   skillSpriteMain: {fileID: 21300000, guid: fb86369fb2deacd4996811dda4a0b157, type: 3}
   skillSpritePressed: {fileID: 21300000, guid: 4f97e98f452c57249a4d121cfc666be1, type: 3}
-  skillDamage: 6
-  skillCooldown: 0.14
-  skillSpeed: 40
+  skillDamage: 9
+  skillCooldown: 0.16
+  skillSpeed: 50
   skillMass: 0.6
+  skillDuration: 0

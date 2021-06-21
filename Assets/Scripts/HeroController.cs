@@ -41,6 +41,8 @@ public class HeroController : MonoBehaviour
 
     private Button heavyAttackButton;
 
+    private Slider _leftRightSlider;
+
     private GameManager _gameManagerSC;
 
     // Attack state machine variables.
@@ -62,6 +64,8 @@ public class HeroController : MonoBehaviour
     private Camera firstPersonCamera;
 
     private EventSystem _eventSystem;
+
+    [SerializeField] private float sliderSpeed;
 
 
     // Initializing the class.
@@ -95,73 +99,54 @@ public class HeroController : MonoBehaviour
             // EventSystem.current.IsPointerOverGameObject(touch.fingerId) &&
             // EventSystem.current.currentSelectedGameObject.GetComponent<CanvasRenderer>() != null
 
+            OnSliderValueChanged();
+
             for (int x = 0; x < Input.touchCount; x++)
             {
                 var touch = Input.touches[x];
 
-                if (touch.phase == TouchPhase.Began && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
+                if (touch.phase == TouchPhase.Began)
                 {
-                    //Debug.Log("Touch start " + touch.fingerId);
-
-                    if (_lightAttackActive && !_heavyAttackActive)
+                    if (!IsTouchOnUIElement(touch.position))
                     {
                         PlayLightAttack();
 
-                    }
-                    else if (!_lightAttackActive && _heavyAttackActive)
-                    {
-                        localheavyAttackAOEGameObject.SetActive(true);
+                        Debug.Log("Screen Touch with ID : " + touch.fingerId);
 
                     }
 
                 }
-                else if (touch.phase == TouchPhase.Moved && !_eventSystem.IsPointerOverGameObject(touch.fingerId))
-                {
-                    if (_lightAttackActive && !_heavyAttackActive)
+
+                else if (touch.phase == TouchPhase.Moved)
+                { 
+                    if (!IsTouchOnUIElement(touch.position))
                     {
                         _lightAttackShootingGO.transform.eulerAngles =
                                            new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset,
                                                        firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
 
                     }
-                    else if (!_lightAttackActive && _heavyAttackActive)
-                    {
-                        StopLightAttack();
-
-                        firstPersonCamera.GetComponent<CameraTouchController>().cameraAimSpeed = 1.5f;
-
-                        _lightAttackShootingGO.transform.eulerAngles =
-                                           new Vector3(firstPersonCamera.transform.eulerAngles.x + upProjectileOffset,
-                                                       firstPersonCamera.transform.eulerAngles.y - leftProjectileOffset, 0f);
-
-                        if (localheavyAttackAOEGameObject.activeSelf)
-                        {
-                            RaycastHeavyAttackDome(localheavyAttackAOEGameObject);
-
-                        }
-                        else if (!localheavyAttackAOEGameObject.activeSelf)
-                        {
-                            localheavyAttackAOEGameObject.SetActive(true);
-
-                        }
-
-                    }
 
                 }
-                else if (touch.phase == TouchPhase.Ended && !IsTouchOnUIElement(touch.position))
+
+                else if (touch.phase == TouchPhase.Ended)
                 {
-                    //Debug.Log("Touch ended " + touch.fingerId);
+                    Debug.Log("Stopped light attack");
 
-                    //Debug.Log("Touch count " + Input.touchCount);
-
-                    if (_lightAttackActive && !_heavyAttackActive)
+                    if (!IsTouchOnUIElement(touch.position))
                     {
                         StopLightAttack();
 
+                        if (Input.touchCount == 0)
+                        {
+                            _leftRightSlider.value = 0;
+
+                        }
+
                     }
-                    else if (!_lightAttackActive && _heavyAttackActive)
+                    else if (IsTouchOnUIElement(touch.position))
                     {
-                        ShootHeavyAttack();
+                        _leftRightSlider.value = 0;
 
                     }
 
@@ -173,6 +158,29 @@ public class HeroController : MonoBehaviour
 
     }
 
+    public void OnSliderValueChanged()
+    {
+        if (Input.touchCount > 0)
+        {
+            foreach (Touch touch in Input.touches)
+            {
+                if (IsTouchOnUIElement(touch.position))
+                {
+                    //transform.position = new Vector3(_leftRightSlider.value * 30, transform.position.y, transform.position.z);
+
+                    //firstPersonCamera.transform.position = new Vector3(firstPersonCamera.transform.position.x + _leftRightSlider.value, firstPersonCamera.transform.position.y, firstPersonCamera.transform.position.z);
+
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x + _leftRightSlider.value, transform.position.y, transform.position.z), Time.fixedDeltaTime * sliderSpeed);
+
+                    firstPersonCamera.transform.position = Vector3.MoveTowards(firstPersonCamera.transform.position, new Vector3(firstPersonCamera.transform.position.x + _leftRightSlider.value, firstPersonCamera.transform.position.y, firstPersonCamera.transform.position.z), Time.fixedDeltaTime * sliderSpeed);
+
+                }
+
+            }
+
+        }
+
+    }
 
     // A function that checks if a touch is on ui element. (Universal function)
     private bool IsTouchOnUIElement(Vector3 touchPos)
@@ -211,7 +219,11 @@ public class HeroController : MonoBehaviour
 
         heavyAttackButton = _uiManagerSC.heavyAttackButton;
 
+        _leftRightSlider = _uiManagerSC._leftRightSlider;
+
         heavyAttackButton.onClick.AddListener(HeavyAttackShootingState);
+
+        // _leftRightSlider.onValueChanged.AddListener(delegate{OnSliderValueChanged();});
 
         //Debug.Log("ui manager type : " + _uiManagerSC.name);
 

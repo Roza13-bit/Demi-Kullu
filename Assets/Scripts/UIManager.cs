@@ -28,6 +28,8 @@ namespace UIClass
 
         [SerializeField] private GameObject nextStagePanel;
 
+        public Slider _leftRightSlider;
+
         private static TextMeshProUGUI strikeCounterTMPStatic;
 
         private static GameObject _nextStagePanelStatic;

@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.65080994, g: 0.666729, b: 0.7075472, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.27450982, g: 0.5176471, b: 0.6117647, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.05
+  m_FogDensity: 0.005
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.13296545, g: 0.19145328, b: 0.33962262, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 2441c79940171dc43b33badf9fe97828, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 5464c15ff9c6ca04cb5790c1773e76fa, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.46830565, g: 0.1955434, b: 0.14083163, a: 1}
+  m_IndirectSpecularColor: {r: 0.15769821, g: 0.23869708, b: 0.3724395, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -466,6 +466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateManagerSC: {fileID: 962749133}
+  uiManagerCS: {fileID: 0}
   heroPrefab: {fileID: 0}
   newTargetsList: []
   activeTargetsList: []
@@ -479,6 +480,7 @@ MonoBehaviour:
   targetGenericSO: {fileID: 0}
   targetSkinnySO: {fileID: 0}
   targetFatSO: {fileID: 0}
+  heavyAttackTimeOver: 0
 --- !u!1 &825259179 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 825259179, guid: bfca539663467604f93dd05ec65a7c0f,
