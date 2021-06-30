@@ -326,7 +326,7 @@ public class HeroController : MonoBehaviour
 
             }
 
-            if (x == _lightAttackPoolList.Count - 1)
+            if (x == _lightAttackPoolList.Count - 8)
             {
                 x = 0;
 
@@ -418,7 +418,6 @@ public class HeroController : MonoBehaviour
         yield break;
 
     }
-
 
     // ~~ Ultimate attack functions. ~~
 
